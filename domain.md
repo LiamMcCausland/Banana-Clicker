@@ -28,7 +28,7 @@ classDiagram
 
     note for Store "Invariants:
     * shopItems exists by may be empty (all items bought)
-    * purchase returns a boolean indicating if the item was purchased successfuly.
+    * purchase() returns a boolean indicating if the item was purchased successfuly.
     "
 
     class Upgrade {
@@ -38,6 +38,7 @@ classDiagram
     }
 
     note for Upgrade "Invariants:
+    * type is not null
     * modifier >= 0
     * price >= 0
     "
@@ -48,8 +49,12 @@ classDiagram
         TRIPLE_CLICK
     }
 
+    note for UpgradeType "Upgrade Types:
+    * DOUBLE_CLICK: multiplies all clicks on the banana by 2
+    * TRIPLE_CLICK: multiplies all clicks on the banana by 3
+    "
+
     Upgrade --> UpgradeType
     Store --o Upgrade
     Player --o Upgrade
-
 ```
