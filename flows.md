@@ -6,10 +6,6 @@ date: Summer 2026
 
 # Flows of interaction
 
-## Sign in
-
-This is the very first thing you'll see when you start my app.
-
 ```mermaid
 flowchart 
     subgraph Game Flow 
