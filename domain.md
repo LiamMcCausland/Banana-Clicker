@@ -65,4 +65,3 @@ classDiagram
     Store --o Upgrade
     Player --o Upgrade
 ```
-```
