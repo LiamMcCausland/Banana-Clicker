@@ -11,7 +11,7 @@ flowchart
     subgraph Game Flow 
         direction TB
         gameStart[[Game Start]]
-        getAction[Wait for action]
+        getAction[User action]
         incrementBanana{Check upgrades and increment Bananas}
         purchaseU{Check Purchase}
 
