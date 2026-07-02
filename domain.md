@@ -19,7 +19,12 @@ classDiagram
     note for Player "Invariants:
     * bananas >= 0
     * upgrades exists and may be empty
-    * click() returns the number of bananas redeemed from the click (upgrade affected)"
+    * upgrades contains no null elements
+    * upgrades contains no duplicate UpgradeTypes
+    click() Postconditions:
+    * Player's banana count increases by the click value.
+    * Returns the number of bananas earned from that click.
+"
 
     class Store{
         -List~Upgrade~ shopItems
@@ -28,6 +33,8 @@ classDiagram
 
     note for Store "Invariants:
     * shopItems exists by may be empty (all items bought)
+    * shopItems contains no null elements
+    purchase() Postconditions:
     * purchase() returns a boolean indicating if the item was purchased successfuly.
     "
 
@@ -39,7 +46,7 @@ classDiagram
 
     note for Upgrade "Invariants:
     * type is not null
-    * modifier >= 0
+    * modifier >= 1
     * price >= 0
     "
 
@@ -57,4 +64,5 @@ classDiagram
     Upgrade --> UpgradeType
     Store --o Upgrade
     Player --o Upgrade
+```
 ```
