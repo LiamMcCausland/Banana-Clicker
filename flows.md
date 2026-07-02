@@ -27,7 +27,7 @@ flowchart
 
         %% Shop Logic
         getAction -- Desired upgrade clicked --> purchaseU
-        purchaseU -. Not enough bananas .-> getAction
-        purchaseU -. Upgrade applied .-> getAction
+        purchaseU -. Not enough bananas, click for more! .-> getAction
+        purchaseU -. Upgrade applied successfully  .-> getAction
 end
 ```
