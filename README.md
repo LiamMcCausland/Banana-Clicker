@@ -17,3 +17,8 @@ npx vite
 
 * You can find my domain model in `domain.md`.
 * You can find my flows of interaction in `flows.md`.
+
+# Sources
+
+* <https://stackoverflow.com/questions/79688441/typescript-enum-alternative-following-the-use-of-erasablesyntaxonly-flag>
+*
