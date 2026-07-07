@@ -21,6 +21,10 @@ export default class StoreController {
     setPlayer(player: Player) {
         this.#storeView.setPlayer(player);
     }
+
+    registerListener(listener: any) {
+        this.#store.registerListener(listener);
+    }
 }
 
     

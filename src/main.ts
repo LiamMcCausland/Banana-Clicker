@@ -6,6 +6,10 @@ let playerController = new PlayerController();
 let storeController = new StoreController();
 storeController.setPlayer(playerController.player());
 
+//TODO: ensures this is best practice
+storeController.registerListener(playerController.playerView());
+
+
 // Banana button click event listener
 document.querySelector("#banana-button")!.addEventListener("click", () => playerController.click());
 

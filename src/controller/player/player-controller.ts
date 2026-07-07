@@ -11,7 +11,6 @@ export default class PlayerController {
         this.#player.registerListener(this.#playerView);
     }
 
-    
     // Called when button is clicked
     click() {
         this.#player.click();
@@ -19,5 +18,9 @@ export default class PlayerController {
 
     player() {
         return this.#player;
+    }
+
+    playerView() {
+        return this.#playerView;
     }
 }

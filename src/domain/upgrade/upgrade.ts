@@ -5,6 +5,7 @@ export default class Upgrade {
     #modifier: number;
     #price: number;
     #name: string;
+    #icon: string;
 
     constructor(upgradeType: UpgradeType) {
         this.#upgradeType = upgradeType;

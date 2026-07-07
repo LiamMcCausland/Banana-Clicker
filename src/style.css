@@ -42,6 +42,72 @@ body {
   margin-bottom: 2rem;
 }
 
+/* ---------- Purchased upgrades strip ---------- */
+.purchased-upgrades {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 0.5rem;
+  max-width: 480px;
+  min-height: 56px;
+  margin-bottom: 1.5rem;
+}
+
+.purchased-upgrades-empty {
+  align-self: center;
+  font-size: 0.85rem;
+  color: #a08334;
+  font-style: italic;
+}
+
+.purchased-upgrade {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: #fff3cc;
+  border: 2px solid #e0b84b;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.purchased-upgrade:hover {
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 4px 10px rgba(122, 92, 0, 0.25);
+  z-index: 1;
+}
+
+.purchased-upgrade img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.purchased-upgrade-count {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  background: #b8860b;
+  color: #fff9e6;
+  font-size: 0.65rem;
+  font-weight: bold;
+  line-height: 1;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 1px solid #fff9e6;
+}
+
 .banana-button {
   background: none;
   border: none;
