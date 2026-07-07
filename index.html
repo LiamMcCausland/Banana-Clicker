@@ -5,9 +5,31 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>2452-clicker</title>
+    <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <div id="app"></div>
+
+    <div class="game-wrapper">
+      <!-- Main clicker area -->
+      <div class="game-main">
+        <div id="banana-count" class="banana-count">Bananas: 0</div>
+        <div class="bps">0 bananas per second</div>
+
+        <button id="banana-button" class="banana-button">
+          <img src="src/assets/banana.png" alt="banana" width="180" height="180" />
+        </button>
+      </div>
+
+      <!-- Upgrades sidebar -->
+      <div class="upgrades-panel">
+        <h2 class="upgrades-title">Upgrades</h2>
+        <div id="upgrades-list" class="upgrades-list">
+          <!-- Upgrades will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -1,20 +1,55 @@
 import { UpgradeType } from "../upgrade/upgrade-type.ts";
-import Upgrade from "../upgrade/upgrade.ts"
+import Upgrade from "../upgrade/upgrade.ts";
+import Player from "../player/player.ts";
+import type Listener from "../listener/listener.ts";
 
-export class Store {
-  private shopItems: Upgrade[];
+export default class Store {
+    #shopItems: Upgrade[];
+    #listeners: Listener[];
 
-  constructor() {
-    this.shopItems = [];
-      
-    // set shop items to all items in upgrade types
-    // TODO: Fix enum logic
-    for (const upgradeType in UpgradeType) {
-      if (UpgradeType[upgradeType] !== UpgradeType.DOUBLE_CLICK) {
-        this.shopItems.push(new Upgrade(UpgradeType[upgradeType], 2, 10));
-      } else if (UpgradeType[upgradeType] === UpgradeType.TRIPLE_CLICK) {
-        this.shopItems.push(new Upgrade(UpgradeType[upgradeType], 3, 20));
-      }
+    constructor() {
+        this.#shopItems = [];
+        this.#listeners = [];
+
+        // Add all upgrade types to the shop items
+        for (const type in UpgradeType) {
+            const upgradeType = UpgradeType[type as keyof typeof UpgradeType];
+            this.#shopItems.push(new Upgrade(upgradeType));
+        }
     }
-  }
+
+    purchase(player: Player, upgrade: Upgrade) {
+        const upgradeType = upgrade.type;
+        const upgradeInShop = this.#shopItems.find(item => item.type === upgradeType);
+        
+        if (!upgradeInShop) {
+            throw new Error("Upgrade not found in shop");
+        }
+
+        // remove the item from the ship and give it to the player if they have enough bananas
+        if (player.bananas >= upgrade.price) {
+            player.bananas = player.bananas - upgrade.price;
+            player.upgrades.push(upgrade);
+            this.#shopItems.splice(this.#shopItems.indexOf(upgradeInShop), 1);
+
+            
+        } else {
+            throw new Error("Not enough bananas to purchase this upgrade");
+        }
+
+        // notify listeners that the store has changed
+        this.notifyAll();
+    }
+
+    registerListener(listener: Listener) {
+        this.#listeners.push(listener);
+    }
+
+    private notifyAll() {
+        this.#listeners.forEach((l) => l.notify());
+    }
+
+    get shopItems() {
+        return this.#shopItems;
+    }
 }

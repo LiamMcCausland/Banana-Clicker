@@ -1,13 +1,23 @@
-import { Player}  from "../../domain/player/player.ts";
+import Player  from "../../domain/player/player.ts";
+import PlayerView from "../../view/player/player-view.ts";
 
 export default class PlayerController {
-    private player: Player;
+    #player: Player;
+    #playerView: PlayerView;
     
-    constructor(player: Player) {
-        this.player = player;
+    constructor() {
+        this.#player = new Player();
+        this.#playerView = new PlayerView(this.#player);
+        this.#player.registerListener(this.#playerView);
     }
 
-    public click() {
-        this.player.click();
+    
+    // Called when button is clicked
+    click() {
+        this.#player.click();
+    }
+
+    player() {
+        return this.#player;
     }
 }
