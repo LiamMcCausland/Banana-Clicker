@@ -2,6 +2,7 @@ import { UpgradeType } from "../upgrade/upgrade-type.ts";
 import Upgrade from "../upgrade/upgrade.ts";
 import Player from "../player/player.ts";
 import type Listener from "../listener/listener.ts";
+import assert from "../../assertions.ts";
 
 export default class Store {
     #shopItems: Upgrade[];
@@ -15,6 +16,15 @@ export default class Store {
         for (const type in UpgradeType) {
             const upgradeType = UpgradeType[type as keyof typeof UpgradeType];
             this.#shopItems.push(new Upgrade(upgradeType));
+        }
+
+        this.checkStore();
+    }
+
+    checkStore() {
+        assert(this.#shopItems !== null, "Shop items cannot be null");
+        for (const item of this.#shopItems) {
+            assert(item !== null, "Shop item cannot be null");
         }
     }
 
@@ -39,6 +49,7 @@ export default class Store {
 
         // notify listeners that the store has changed
         this.notifyAll();
+        this.checkStore();
     }
 
     registerListener(listener: Listener) {

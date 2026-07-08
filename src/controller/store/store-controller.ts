@@ -10,7 +10,7 @@ export default class StoreController {
 
     constructor() {
         this.#store = new Store();
-        this.#storeView = new StoreView(this.#store);
+        this.#storeView = new StoreView(this.#store, this);
         this.#store.registerListener(this.#storeView);
     }
 

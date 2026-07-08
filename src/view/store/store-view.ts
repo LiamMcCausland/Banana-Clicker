@@ -1,14 +1,17 @@
 import Store from "../../domain/store/store";
 import Upgrade from "../../domain/upgrade/upgrade";
 import Player from "../../domain/player/player";
+import StoreController from "../../controller/store/store-controller";
 
 export default class StoreView {
-    #store: Store;
     #player: Player;
+    #store: Store;
+    #controller: StoreController;
 
-    constructor(Store: Store) {
-        this.#store = Store;
+    constructor(Store: Store, controller: StoreController) {
         this.#player = null as any;
+        this.#store = Store;
+        this.#controller = controller;
     }
 
     setPlayer(player: Player) {
@@ -17,9 +20,9 @@ export default class StoreView {
     }
 
     renderStore() {
-        
+
         const container = document.querySelector('#upgrades-list')!;
-        container.innerHTML = ''; 
+        container.innerHTML = '';
         this.#store.shopItems.forEach((upgrade: Upgrade) => {
             const button = document.createElement('button');
             button.className = 'upgrade-item';
@@ -34,7 +37,7 @@ export default class StoreView {
       <div class="upgrade-cost">${upgrade.price}</div>
     `;
 
-            button.addEventListener('click', () => this.#store.purchase(this.#player, upgrade));
+            button.addEventListener('click', () => this.#controller.purchase(this.#player, upgrade));
 
             container.appendChild(button);
         });

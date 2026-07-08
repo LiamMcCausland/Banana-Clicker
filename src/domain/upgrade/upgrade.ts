@@ -1,15 +1,24 @@
 import { UpgradeType } from "./upgrade-type.ts"
+import assert from "../../assertions.ts";
 
 export default class Upgrade {
     #upgradeType: UpgradeType;
     #modifier: number;
     #price: number;
     #name: string;
-    #icon: string;
 
     constructor(upgradeType: UpgradeType) {
         this.#upgradeType = upgradeType;
         this.getInfoByType(upgradeType);
+
+        this.checkUpgrade();
+    }
+
+    checkUpgrade() {
+        assert(this.#modifier >= 1, "Modifier must be greater than 0");
+        assert(this.#price > 0, "Price must be greater than 0");
+        assert(this.#name !== null && this.#name !== "", "Name cannot be null or empty");
+        assert(this.#upgradeType !== null, "Upgrade type cannot be null");
     }
 
     getInfoByType(type: UpgradeType){

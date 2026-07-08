@@ -21,7 +21,9 @@ export default class Player {
         assert(this.#bananas >= 0, "Bananas cannot be negative");
         assert(this.#upgrades !== null, "Upgrades cannot be null");
 
-        // upgrades has no duplicates
+        for (const upgrade of this.#upgrades) {
+            assert(upgrade !== null, "Upgrade cannot be null");
+        }
     }
 
     registerListener(listener: Listener) {
@@ -38,15 +40,11 @@ export default class Player {
 
         // loop over each upgrade, applying them in order
         for (const upgrade of this.#upgrades) {
-
             bananasClicked = bananasClicked * upgrade.modifier;
-            
-            console.log("Clicked and got " + bananasClicked);
         }
 
         this.#bananas += bananasClicked;
-
-        console.log(this);
+        this.checkPlayer();
         
         // update listensers for banana count change
         this.notifyAll();
@@ -56,12 +54,14 @@ export default class Player {
         return this.#bananas;
     }
 
-    set bananas(val: number) {
-        this.#bananas = val;
-    }
-
     get upgrades() {
         return this.#upgrades;
     }
+
+    set bananas(val: number) {
+        this.#bananas = val;
+        this.checkPlayer();
+    }
+
 
 }
