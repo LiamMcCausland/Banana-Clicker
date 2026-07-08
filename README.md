@@ -21,4 +21,4 @@ npx vite
 # Sources
 
 * <https://stackoverflow.com/questions/79688441/typescript-enum-alternative-following-the-use-of-erasablesyntaxonly-flag>
-*
+* <https://vitest.dev/guide/>
