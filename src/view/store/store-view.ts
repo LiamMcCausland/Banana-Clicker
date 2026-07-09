@@ -18,12 +18,11 @@ export default class StoreView {
     renderUpgradePanel() {
         const gameWrapper = document.querySelector('.game-wrapper')!;
         const upgradePanel = document.createElement('div');
-        upgradePanel.id = 'upgrades-panel';
-        upgradePanel.innerHTML = `      <div class="upgrades-panel">
+        upgradePanel.className = 'upgrades-panel';
+        upgradePanel.innerHTML = `
         <h2 class="upgrades-title">Upgrades</h2>
         <div id="upgrades-list" class="upgrades-list">
         </div>
-      </div>
     `;
         gameWrapper.appendChild(upgradePanel);
     }

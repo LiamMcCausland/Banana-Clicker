@@ -23,8 +23,7 @@ export default class PlayerView {
     renderGamePanel() {
         const playerPanel = document.createElement("div");
         const mainContainer = document.querySelector(".game-wrapper")!;
-        playerPanel.id = "game-main";
-        playerPanel.innerHTML = `      <div class="game-main">
+        mainContainer.innerHTML = `      <div class="game-main">
         <div id="banana-count" class="banana-count">Bananas: 0</div>
 
         <!-- Purchased upgrades strip -->
