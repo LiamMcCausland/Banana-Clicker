@@ -4,11 +4,20 @@ import PlayerController from "../../controller/player/player-controller.ts";
 export default class PlayerView {
     #player: Player
     #playerController: PlayerController;
-    
+
     constructor(player: Player, playerController: PlayerController) {
         this.#player = player;
         this.#playerController = playerController;
+        this.createGameWrapper();
         this.renderGamePanel();
+    }
+
+    createGameWrapper() {
+        const app = document.getElementById("app")!;
+        const gameWrapper = document.createElement("div");
+        gameWrapper.className = "game-wrapper";
+        app.appendChild(gameWrapper);
+
     }
 
     renderGamePanel() {
@@ -28,7 +37,7 @@ export default class PlayerView {
         </button>
       </div>`;
 
-        mainContainer.appendChild(playerPanel); 
+        mainContainer.appendChild(playerPanel);
         document.querySelector("#banana-button")!.addEventListener("click", () => this.#playerController.click());
     }
 

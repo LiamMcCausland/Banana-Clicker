@@ -33,7 +33,7 @@ export default class Store {
         const upgradeInShop = this.#shopItems.find(item => item.type === upgradeType);
         
         if (!upgradeInShop) {
-            throw new Error("Upgrade not found in shop");
+            throw new UpgradeNotFoundException("Upgrade not found in shop");
         }
 
         // remove the item from the ship and give it to the player if they have enough bananas
@@ -44,7 +44,7 @@ export default class Store {
 
             
         } else {
-            throw new Error("Not enough bananas to purchase this upgrade");
+            throw new NotEnoughBananasException("Not enough bananas to purchase this upgrade");
         }
 
         // notify listeners that the store has changed
@@ -62,5 +62,16 @@ export default class Store {
 
     get shopItems() {
         return this.#shopItems;
+    }
+}
+
+class NotEnoughBananasException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+class UpgradeNotFoundException extends Error {
+    constructor(message: string) {
+        super(message);
     }
 }
