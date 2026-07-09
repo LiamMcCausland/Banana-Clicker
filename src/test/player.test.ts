@@ -47,4 +47,13 @@ test('Setting negative bananas throws', () => {
     expect(() => { player.bananas = -1; }).toThrow();
 });
 
+test('Player notifies listeners on click', () => {
+    const player = new Player();
+    let notified = false;
+    player.registerListener({
+        notify: () => { notified = true; }
+    });
+    player.click();
+    expect(notified).toBe(true);
+});
 

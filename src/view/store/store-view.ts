@@ -12,6 +12,20 @@ export default class StoreView {
         this.#player = null as any;
         this.#store = Store;
         this.#controller = controller;
+        this.renderUpgradePanel();
+    }
+
+    renderUpgradePanel() {
+        const gameWrapper = document.querySelector('.game-wrapper')!;
+        const upgradePanel = document.createElement('div');
+        upgradePanel.id = 'upgrades-panel';
+        upgradePanel.innerHTML = `      <div class="upgrades-panel">
+        <h2 class="upgrades-title">Upgrades</h2>
+        <div id="upgrades-list" class="upgrades-list">
+        </div>
+      </div>
+    `;
+        gameWrapper.appendChild(upgradePanel);
     }
 
     setPlayer(player: Player) {

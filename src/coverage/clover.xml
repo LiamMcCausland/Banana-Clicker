@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1783482236756" clover="3.2.0">
-  <project timestamp="1783482236756" name="All files">
-    <metrics statements="68" coveredstatements="66" conditionals="11" coveredconditionals="10" methods="26" coveredmethods="24" elements="105" coveredelements="100" complexity="0" loc="68" ncloc="68" packages="4" files="5" classes="5"/>
+<coverage generated="1783539442469" clover="3.2.0">
+  <project timestamp="1783539442469" name="All files">
+    <metrics statements="68" coveredstatements="67" conditionals="11" coveredconditionals="10" methods="26" coveredmethods="26" elements="105" coveredelements="103" complexity="0" loc="68" ncloc="68" packages="4" files="5" classes="5"/>
     <package name="src">
       <metrics statements="3" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
       <file name="assertions.ts" path="/Users/liam/Documents/2452-clicker/src/assertions.ts">
         <metrics statements="3" coveredstatements="3" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
-        <line num="5" count="180" type="cond" truecount="2" falsecount="0"/>
+        <line num="5" count="184" type="cond" truecount="2" falsecount="0"/>
         <line num="6" count="1" type="stmt"/>
         <line num="13" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.domain.player">
-      <metrics statements="20" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="7"/>
+      <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9"/>
       <file name="player.ts" path="/Users/liam/Documents/2452-clicker/src/domain/player/player.ts">
-        <metrics statements="20" coveredstatements="19" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="7"/>
-        <line num="13" count="13" type="stmt"/>
-        <line num="14" count="13" type="stmt"/>
-        <line num="15" count="13" type="stmt"/>
-        <line num="17" count="13" type="stmt"/>
-        <line num="21" count="28" type="stmt"/>
-        <line num="22" count="28" type="stmt"/>
-        <line num="24" count="28" type="stmt"/>
+        <metrics statements="20" coveredstatements="20" conditionals="0" coveredconditionals="0" methods="9" coveredmethods="9"/>
+        <line num="13" count="14" type="stmt"/>
+        <line num="14" count="14" type="stmt"/>
+        <line num="15" count="14" type="stmt"/>
+        <line num="17" count="14" type="stmt"/>
+        <line num="21" count="30" type="stmt"/>
+        <line num="22" count="30" type="stmt"/>
+        <line num="24" count="30" type="stmt"/>
         <line num="25" count="1" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="34" count="4" type="stmt"/>
-        <line num="39" count="4" type="stmt"/>
-        <line num="42" count="4" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="5" type="stmt"/>
+        <line num="39" count="5" type="stmt"/>
+        <line num="42" count="5" type="stmt"/>
         <line num="43" count="1" type="stmt"/>
-        <line num="46" count="4" type="stmt"/>
-        <line num="47" count="4" type="stmt"/>
-        <line num="50" count="4" type="stmt"/>
+        <line num="46" count="5" type="stmt"/>
+        <line num="47" count="5" type="stmt"/>
+        <line num="50" count="5" type="stmt"/>
         <line num="54" count="16" type="stmt"/>
         <line num="58" count="10" type="stmt"/>
         <line num="62" count="11" type="stmt"/>

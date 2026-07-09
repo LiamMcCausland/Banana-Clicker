@@ -7,7 +7,7 @@ export default class PlayerController {
     
     constructor() {
         this.#player = new Player();
-        this.#playerView = new PlayerView(this.#player);
+        this.#playerView = new PlayerView(this.#player, this);
         this.#player.registerListener(this.#playerView);
     }
 

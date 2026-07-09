@@ -76,3 +76,19 @@ test('Purchasing throws if upgrade is not found in shop', () => {
 
     expect(() => store.purchase(player, foreignUpgrade)).toThrow("Upgrade not found in shop");
 });
+
+test('Store notifies listeners on purchase', () => {
+    let store = new Store();
+    let player = new Player();
+    player.bananas = 50;
+    
+    let notified = false;
+    store.registerListener({
+        notify: () => { notified = true; }
+    });
+
+    // Should notify the listener when a purchase is made
+    store.purchase(player, store.shopItems.find(i => i.type === UpgradeType.DOUBLE_CLICK)!);
+
+    expect(notified).toBe(true);
+});

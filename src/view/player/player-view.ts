@@ -1,10 +1,35 @@
 import Player from "../../domain/player/player.ts";
+import PlayerController from "../../controller/player/player-controller.ts";
 
 export default class PlayerView {
     #player: Player
-
-    constructor(player: Player) {
+    #playerController: PlayerController;
+    
+    constructor(player: Player, playerController: PlayerController) {
         this.#player = player;
+        this.#playerController = playerController;
+        this.renderGamePanel();
+    }
+
+    renderGamePanel() {
+        const playerPanel = document.createElement("div");
+        const mainContainer = document.querySelector(".game-wrapper")!;
+        playerPanel.id = "game-main";
+        playerPanel.innerHTML = `      <div class="game-main">
+        <div id="banana-count" class="banana-count">Bananas: 0</div>
+
+        <!-- Purchased upgrades strip -->
+        <div id="purchased-upgrades" class="purchased-upgrades">
+          <div class="purchased-upgrades-empty">No upgrades purchased yet</div>
+        </div>
+
+        <button id="banana-button" class="banana-button">
+          <img src="src/assets/banana.png" alt="banana" width="180" height="180" />
+        </button>
+      </div>`;
+
+        mainContainer.appendChild(playerPanel); 
+        document.querySelector("#banana-button")!.addEventListener("click", () => this.#playerController.click());
     }
 
     renderUpgrades() {
