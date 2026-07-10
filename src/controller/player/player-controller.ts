@@ -1,5 +1,6 @@
 import Player  from "../../domain/player/player.ts";
 import PlayerView from "../../view/player/player-view.ts";
+import Upgrade from "../../domain/upgrade/upgrade.ts";
 
 export default class PlayerController {
     #player: Player;
@@ -16,6 +17,10 @@ export default class PlayerController {
         this.#player.click();
     }
 
+    purchase(upgrade: Upgrade) {
+        this.#player.purchaseUpgrade(upgrade);
+    }
+    
     player() {
         return this.#player;
     }

@@ -1,10 +1,4 @@
 import PlayerController from "./controller/player/player-controller";
-import StoreController from "./controller/store/store-controller";
 
-// listen to banana button
 let playerController = new PlayerController();
-let storeController = new StoreController();
-storeController.setPlayer(playerController.player());
 
-//TODO: ensures this is best practice
-storeController.registerListener(playerController.playerView());

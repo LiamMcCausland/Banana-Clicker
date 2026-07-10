@@ -1,5 +1,5 @@
 import Upgrade from "../upgrade/upgrade.ts"
-import assert  from "../../assertions.ts";
+import assert from "../../assertions.ts";
 import type Listener from "../listener/listener.ts";
 
 export default class Player {
@@ -24,6 +24,11 @@ export default class Player {
         for (const upgrade of this.#upgrades) {
             assert(upgrade !== null, "Upgrade cannot be null");
         }
+
+        // check no duplicate upgrades
+        const hasNoDuplicates = new Set(this.#upgrades.map(upgrade => upgrade.name)).size === this.#upgrades.length;
+        assert(hasNoDuplicates, "Player cant have duplicate upgrades");
+
     }
 
     registerListener(listener: Listener) {
@@ -45,11 +50,33 @@ export default class Player {
 
         this.#bananas += bananasClicked;
         this.checkPlayer();
-        
+
         // update listensers for banana count change
         this.notifyAll();
     }
 
+    purchaseUpgrade(upgrade: Upgrade): boolean {
+
+        let success = false;
+        if (!upgrade) {
+            throw new UpgradeNotFoundException("Upgrade not found in shop");
+        } else if (this.#upgrades.includes(upgrade)) {
+            throw new DuplicateUpgradeException("Player cant have duplicate upgrades")
+        } else {
+            if (this.#bananas >= upgrade.price) {
+                this.#bananas -= upgrade.price;
+                this.#upgrades.push(upgrade);
+                success = true;
+            } else {
+                throw new NotEnoughBananasException("Not enough bananas to purchase this upgrade");
+            }
+        }
+
+        this.notifyAll();
+        this.checkPlayer();
+        return success;
+    }
+s
     get bananas(): number {
         return this.#bananas;
     }
@@ -63,5 +90,20 @@ export default class Player {
         this.checkPlayer();
     }
 
+}
 
+class NotEnoughBananasException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+class UpgradeNotFoundException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+class DuplicateUpgradeException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
 }

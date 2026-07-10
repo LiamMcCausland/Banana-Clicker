@@ -1,5 +1,7 @@
 import Player from "../../domain/player/player.ts";
 import PlayerController from "../../controller/player/player-controller.ts";
+import { ALL_UPGRADES } from "../../domain/upgrade/upgrade-list.ts";
+import Upgrade from "../../domain/upgrade/upgrade.ts"
 
 export default class PlayerView {
     #player: Player
@@ -10,6 +12,9 @@ export default class PlayerView {
         this.#playerController = playerController;
         this.createGameWrapper();
         this.renderGamePanel();
+        this.renderUpgradePanel();
+        this.renderUpgrades();
+        this.renderStore();
     }
 
     createGameWrapper() {
@@ -18,6 +23,18 @@ export default class PlayerView {
         gameWrapper.className = "game-wrapper";
         app.appendChild(gameWrapper);
 
+    }
+
+    renderUpgradePanel() {
+        const gameWrapper = document.querySelector('.game-wrapper')!;
+        const upgradePanel = document.createElement('div');
+        upgradePanel.className = 'upgrades-panel';
+        upgradePanel.innerHTML = `
+        <h2 class="upgrades-title">Upgrades</h2>
+        <div id="upgrades-list" class="upgrades-list">
+        </div>
+    `;
+        gameWrapper.appendChild(upgradePanel);
     }
 
     renderGamePanel() {
@@ -48,14 +65,44 @@ export default class PlayerView {
             this.#player.upgrades.forEach((upgrade) => {
                 const upgradeElement = document.createElement("div");
                 upgradeElement.className = "purchased-upgrade";
-                upgradeElement.textContent = `${upgrade.name}`;
+                upgradeElement.textContent = `x${upgrade.modifier}`;
                 document.querySelector("#purchased-upgrades")!.appendChild(upgradeElement);
             });
         }
     }
 
+    renderStore() {
+
+        const container = document.querySelector('#upgrades-list')!;
+        container.innerHTML = '';
+
+        ALL_UPGRADES.forEach((upgrade: Upgrade) => {
+            if (!this.#player.upgrades.includes(upgrade)) {
+                const button = document.createElement('button');
+                button.className = 'upgrade-item';
+                button.innerHTML = `
+      <img src="src/assets/banana.png" alt="upgrade" class="upgrade-icon" />
+      <div class="upgrade-info">
+        <div class="upgrade-name">${upgrade.name}</div>
+        <div class="upgrade-desc">+${upgrade.modifier} bananas per click</div>
+      </div>
+      <div class="upgrade-cost">${upgrade.price}</div>
+    `;
+
+                button.addEventListener('click', () => this.#playerController.purchase(upgrade));
+
+                container.appendChild(button);
+            }
+        });
+    }
+
     notify() {
+        // Update banana count
         document.querySelector("#banana-count")!.textContent = "Bananas: " + this.#player.bananas.toString();
+
         this.renderUpgrades();
+
+        // Update upgrades available
+        this.renderStore();
     }
 }
