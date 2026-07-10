@@ -49,3 +49,9 @@ classDiagram
     Upgrade <|-- TripleClickUpgrade
     Player --o Upgrade
 ```
+
+# Changes made
+
+* Removed store object (YAGNI)
+* Changes upgrades to inherit the upgrade type instead of being an enum.
+

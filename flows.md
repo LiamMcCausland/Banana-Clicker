@@ -40,3 +40,7 @@ flowchart TB
         purchaseU -. Sufficient bananas .-> purchaseSuccess
     end
 ```
+# Changes
+
+* Seperate flows into two diagrams.
+  * one for the purchase and one for clicking
