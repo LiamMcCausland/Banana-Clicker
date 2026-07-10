@@ -21,7 +21,7 @@ flowchart TB
         clickEnd[[Banana Count Updated]]
 
         getAction1 -- Banana GUI clicked --> incrementBanana
-        incrementBanana -- bananas incremented --> clickEnd
+        incrementBanana -. bananas incremented .-> clickEnd
     end
 ```
 
