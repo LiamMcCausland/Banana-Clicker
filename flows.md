@@ -16,9 +16,9 @@ Its also assumed that the game does not have a *end* or *exit* function at any p
 flowchart TB
     subgraph Banana Click Flow
         direction TB
-        getAction1[Choose Action]
+        getAction1[[Choose Action]]
         incrementBanana{Process Click}
-        clickEnd([Banana Count Updated])
+        clickEnd[[Banana Count Updated]]
 
         getAction1 -- Banana GUI clicked --> incrementBanana
         incrementBanana -- bananas incremented --> clickEnd
@@ -28,27 +28,15 @@ flowchart TB
 **Upgrade Purchase Flow:**
 
 ```mermaid
-flowchart TB
+    flowchart TB
     subgraph Upgrade Purchase Flow
         direction TB
-        getAction2[Choose Action]
+        getAction2[[Choose Action]]
         purchaseU{Attempt Purchase}
-        purchaseFail([Purchase Failed - Not Enough Bananas])
-        purchaseSuccess([Upgrade Purchased])
+        purchaseSuccess[[Upgrade Purchased]]
 
         getAction2 -- Desired upgrade clicked --> purchaseU
-        purchaseU -- Not enough bananas --> purchaseFail
-        purchaseU -- Sufficient bananas --> purchaseSuccess
+        purchaseU -. Not enough bananas, click for more! .-> getAction2
+        purchaseU -. Sufficient bananas .-> purchaseSuccess
     end
-```
-
-**Top Level Game Flow:**
-
-```mermaid
-flowchart TB
-    gameStart[[Game Start]]
-    getAction[Choose Action]
-    gameStart --> getAction
-    getAction -- Banana GUI clicked --> clickFlow[[Banana Click Flow]]
-    getAction -- Desired upgrade clicked --> purchaseFlow[[Upgrade Purchase Flow]]
 ```
