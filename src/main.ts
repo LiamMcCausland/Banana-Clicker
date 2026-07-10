@@ -8,8 +8,3 @@ storeController.setPlayer(playerController.player());
 
 //TODO: ensures this is best practice
 storeController.registerListener(playerController.playerView());
-
-
-
-
-
