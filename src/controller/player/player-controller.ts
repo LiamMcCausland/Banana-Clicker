@@ -17,6 +17,7 @@ export default class PlayerController {
         this.#player.click();
     }
 
+    // When upgrade is chosen
     purchase(upgrade: Upgrade) {
         this.#player.purchaseUpgrade(upgrade);
     }
