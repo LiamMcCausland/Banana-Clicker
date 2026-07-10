@@ -37,6 +37,7 @@ flowchart TB
 
         getAction2 -- Desired upgrade clicked --> purchaseU
         purchaseU -. Not enough bananas, click for more! .-> getAction2
+        purchaseU -. Upgrade already purchased, choose another .-> getAction2
         purchaseU -. Sufficient bananas .-> purchaseSuccess
     end
 ```
