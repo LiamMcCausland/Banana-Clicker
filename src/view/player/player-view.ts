@@ -2,6 +2,9 @@ import Player from "../../domain/player/player.ts";
 import PlayerController from "../../controller/player/player-controller.ts";
 import { ALL_UPGRADES } from "../../domain/upgrade/upgrade-list.ts";
 import Upgrade from "../../domain/upgrade/upgrade.ts"
+import { NotEnoughBananasException } from "../../domain/player/player.ts";
+import { UpgradeNotFoundException } from "../../domain/player/player.ts";
+import { DuplicateUpgradeException } from "../../domain/player/player.ts";
 
 export default class PlayerView {
     #player: Player
@@ -15,6 +18,30 @@ export default class PlayerView {
         this.renderUpgradePanel();
         this.renderUpgrades();
         this.renderStore();
+    }
+
+    purchase(upgrade: Upgrade) {
+
+        try {
+            this.#playerController.purchase(upgrade);
+        } catch(e:any) {
+            let dialogPopUp = document.createElement('dialog');
+            const app = document.getElementById("app")!;
+            dialogPopUp.className = "popup-message";
+
+            // Show dialog based on error:
+            // 
+            if (e instanceof NotEnoughBananasException) {
+                dialogPopUp.textContent = e.message;
+            } else if (e instanceof UpgradeNotFoundException) {
+                dialogPopUp.textContent = e.message;
+            } else if (e instanceof DuplicateUpgradeException) {
+                dialogPopUp.textContent = e.message;
+            }
+
+            app.appendChild(dialogPopUp);
+            
+        }
     }
 
     createGameWrapper() {
@@ -89,7 +116,7 @@ export default class PlayerView {
       <div class="upgrade-cost">${upgrade.price}</div>
     `;
 
-                button.addEventListener('click', () => this.#playerController.purchase(upgrade));
+                button.addEventListener('click', () => this.purchase(upgrade));
 
                 container.appendChild(button);
             }

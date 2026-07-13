@@ -92,17 +92,17 @@ s
 
 }
 
-class NotEnoughBananasException extends Error {
+export class NotEnoughBananasException extends Error {
     constructor(message: string) {
         super(message);
     }
 }
-class UpgradeNotFoundException extends Error {
+export class UpgradeNotFoundException extends Error {
     constructor(message: string) {
         super(message);
     }
 }
-class DuplicateUpgradeException extends Error {
+export class DuplicateUpgradeException extends Error {
     constructor(message: string) {
         super(message);
     }
