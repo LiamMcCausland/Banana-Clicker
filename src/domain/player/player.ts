@@ -5,8 +5,6 @@ import type Listener from "../listener/listener.ts";
 export default class Player {
     #bananas: number;
     #upgrades: Upgrade[];
-
-    // list of people who are listening to the player
     #listeners: Listener[];
 
     constructor() {
@@ -39,7 +37,7 @@ export default class Player {
         this.#listeners.forEach((l) => l.notify());
     }
 
-    // Run when banana is clicked
+    // Run when banana is clicked, returns the amount of bananas redeemed.
     click() {
         let bananasClicked = 1;
 
@@ -61,14 +59,14 @@ export default class Player {
         if (!upgrade) {
             throw new UpgradeNotFoundException("Upgrade not found in shop");
         } else if (this.#upgrades.includes(upgrade)) {
-            throw new DuplicateUpgradeException("Player cant have duplicate upgrades")
+            throw new DuplicateUpgradeException("Player cant have duplicate upgrades, choose a different upgrade.")
         } else {
             if (this.#bananas >= upgrade.price) {
                 this.#bananas -= upgrade.price;
                 this.#upgrades.push(upgrade);
                 success = true;
             } else {
-                throw new NotEnoughBananasException("Not enough bananas to purchase this upgrade");
+                throw new NotEnoughBananasException("Not enough bananas to purchase this upgrade, click for more!");
             }
         }
 
@@ -76,7 +74,7 @@ export default class Player {
         this.checkPlayer();
         return success;
     }
-s
+    
     get bananas(): number {
         return this.#bananas;
     }
