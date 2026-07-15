@@ -53,5 +53,5 @@ classDiagram
 # Changes made
 
 * Removed store object (YAGNI)
-* Changes upgrades to inherit the upgrade type instead of being an enum.
-
+* Changed upgrades to inherit the upgrade type instead of being an enum.
+* Since store is gone player now does the purchase behaviour.
