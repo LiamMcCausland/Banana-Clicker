@@ -24,23 +24,21 @@ export default class PlayerView {
 
         try {
             this.#playerController.purchase(upgrade);
-        } catch(e:any) {
+        } catch (e: any) {
             let dialogPopUp = document.createElement('dialog');
             const app = document.getElementById("app")!;
             dialogPopUp.className = "popup-message";
-
-            // Show dialog based on error:
-            // 
-            if (e instanceof NotEnoughBananasException) {
-                dialogPopUp.textContent = e.message;
-            } else if (e instanceof UpgradeNotFoundException) {
-                dialogPopUp.textContent = e.message;
-            } else if (e instanceof DuplicateUpgradeException) {
-                dialogPopUp.textContent = e.message;
-            }
-
+            dialogPopUp.textContent = e.message;
             app.appendChild(dialogPopUp);
+
+            let closeButton = document.createElement('button');
+            closeButton.className = "close-button";
+            closeButton.textContent = "Close";
+            dialogPopUp.appendChild(closeButton);
+
+            closeButton.addEventListener('click', () => {dialogPopUp.close();});
             
+            dialogPopUp.showModal(); 
         }
     }
 
