@@ -38,7 +38,7 @@ test('Player upgrades modify bananas gained per click', () => {
     const upgrade = new DoubleClickUpgrade();
     player.upgrades.push(upgrade);
     player.click();
-    expect(player.bananas).toBe(2); // assuming DOUBLE_CLICK modifier = 2
+    expect(player.bananas).toBe(2); 
 });
 
 test('Setting negative bananas throws', () => {
