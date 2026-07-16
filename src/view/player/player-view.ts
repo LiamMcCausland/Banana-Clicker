@@ -2,9 +2,6 @@ import Player from "../../domain/player/player.ts";
 import PlayerController from "../../controller/player/player-controller.ts";
 import { ALL_UPGRADES } from "../../domain/upgrade/upgrade-list.ts";
 import Upgrade from "../../domain/upgrade/upgrade.ts"
-import { NotEnoughBananasException } from "../../domain/player/player.ts";
-import { UpgradeNotFoundException } from "../../domain/player/player.ts";
-import { DuplicateUpgradeException } from "../../domain/player/player.ts";
 
 export default class PlayerView {
     #player: Player
