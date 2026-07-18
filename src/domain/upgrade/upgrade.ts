@@ -29,5 +29,4 @@ export default class Upgrade {
     get name() {
         return this.#name;
     }
-
 }

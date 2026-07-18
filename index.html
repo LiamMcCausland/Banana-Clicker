@@ -10,5 +10,26 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+
+  <!-- Include the Repl web component in your page -->
+
+  <script
+  src="https://cdn.jsdelivr.net/npm/@electric-sql/pglite-repl/dist-webcomponent/Repl.js"
+  type="module"
+></script>
+  
+<pglite-repl id="repl"></pglite-repl>
+
+<script type="module">
+  import db from '/src/domain/persistence/connection.ts'
+  import ddl from './create-tables.sql?raw'
+
+  db().exec(ddl);
+
+  // Retrieve the Repl element
+  const repl = document.getElementById('repl')
+  repl.pg = db();
+
+</script>
   </body>
 </html>
