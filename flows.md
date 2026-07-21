@@ -10,25 +10,39 @@ This flows of interaction represents the main page of the game. Its assumed that
 
 Its also assumed that the game does not have a *end* or *exit* function at any point and that simply closing the webpage is the way of exiting the game.
 
+**Banana Click Flow:**
+
 ```mermaid
-flowchart 
-    subgraph Game Flow 
+flowchart TB
+    subgraph Banana Click Flow
         direction TB
-        gameStart[[Game Start]]
-        getAction[Choose Action]
+        getAction1[[Choose Action]]
         incrementBanana{Process Click}
+        clickEnd[[Banana Count Updated]]
 
-        purchaseU{Attempt Purchase}
-        
-        gameStart --> getAction
-
-        %% Banana Logic
-        getAction -- Banana GUI clicked --> incrementBanana
-        incrementBanana -. bananas incremented .-> getAction
-
-        %% Shop Logic
-        getAction -- Desired upgrade clicked --> purchaseU
-        purchaseU -. Not enough bananas, click for more! .-> getAction
-        purchaseU -. Upgrade applied successfully  .-> getAction
-end
+        getAction1 -- Banana GUI clicked --> incrementBanana
+        incrementBanana -. bananas incremented .-> clickEnd
+    end
 ```
+
+**Upgrade Purchase Flow:**
+
+```mermaid
+    flowchart TB
+    subgraph Upgrade Purchase Flow
+        direction TB
+        getAction2[[Choose Action]]
+        purchaseU{Attempt Purchase}
+        purchaseSuccess[[Upgrade Purchased]]
+
+        getAction2 -- Desired upgrade clicked --> purchaseU
+        purchaseU -. Not enough bananas, click for more! .-> getAction2
+        purchaseU -. Upgrade already purchased, choose another .-> getAction2
+        purchaseU -. Sufficient bananas .-> purchaseSuccess
+    end
+```
+# Changes
+
+* Seperate flows into two diagrams.
+  * one for the purchase and one for clicking
+
