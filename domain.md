@@ -10,6 +10,7 @@ date: Summer 2026
 classDiagram
 class Player{
         -string username
+        -string password
         -number bananas
         -List~Upgrade~ upgrades
         -List~Building~ buildings
@@ -23,6 +24,9 @@ class Player{
     * upgrades exists and may be empty
     * upgrades contains no null elements
     * upgrades contains no duplicate upgrade types
+    * buildings exists and may be empty
+    * buildings holds each instance of the buildings (i.e 3 instances = 3 owned)
+    * each object in buildings are unique
     click() Postconditions:
     * Player's banana count increases by the click value.
     * Returns the number of bananas earned from that click.
@@ -32,6 +36,8 @@ class Player{
     "
 class Upgrade {
 <<Interface>>
+        -string name
+        -string description
         -number modifier
         -number price
         +getMultiplier() number
@@ -39,6 +45,8 @@ class Upgrade {
     note for Upgrade "Invariants:
     * modifier >= 1
     * price >= 0
+    * name not empty
+    * desc not empty
     "
 class DoubleClickUpgrade {
         +getMultiplier() number
@@ -52,6 +60,7 @@ class TripleClickUpgrade {
 class Building {
 <<Interface>>
         -string name
+        -string description
         -number price
         -number bananasPerSecond
         +getBps() number
@@ -59,13 +68,16 @@ class Building {
     note for Building "Invariants:
     * price >= 0
     * bananasPerSecond >= 1
+    * name not empty
+    * desc not empty
     "
 class Acuminata {
-
+      +getBps() number
     }
     note for Acuminata "Grows 5 bananas per second."
 class Balbisiana {
 
+      +getBps() number
     }
     note for Balbisiana "Grows 10 bananas per second."
 
