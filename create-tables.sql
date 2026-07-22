@@ -1,8 +1,7 @@
 create table if not exists player (
     username varchar(255) primary key,
     password varchar(255) not null,
-    bananas integer not null default 0,
-    last_login timestamp default current_timestamp
+    bananas integer not null default 0
 );
 
 -- Table that holds all possible building types
