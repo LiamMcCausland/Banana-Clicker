@@ -6,10 +6,6 @@ date: Summer 2026
 
 # Flows of interaction
 
-This flows of interaction represents the main page of the game. Its assumed that the user can see all the buttons present on the page and that flows in this diagram do *not* represent transitions to a new page of the website.
-
-Its also assumed that the game does not have a *end* or *exit* function at any point and that simply closing the webpage is the way of exiting the game.
-
 **Banana Click Flow:**
 
 ```mermaid
@@ -41,7 +37,30 @@ flowchart TB
         purchaseU -. Sufficient bananas .-> purchaseSuccess
     end
 ```
+**Account Flow**:
+
+```mermaid
+flowchart TB
+subgraph Account Flow
+direction TB
+        getAction3[[Choose Action]]
+        checkAccount{Check Credentials}
+        createAccount{Create Account}
+        signedIn[[Signed In]]
+
+        getAction3 -- Sign in clicked --> checkAccount
+        checkAccount -. Invalid username or password .-> getAction3
+        checkAccount -. Valid credentials .-> signedIn
+
+        getAction3 -- Create account clicked --> createAccount
+        createAccount -. Username already taken .-> getAction3
+        createAccount -. Account created .-> signedIn
+end
+```
+
 # Changes
 
 * Seperate flows into two diagrams.
   * one for the purchase and one for clicking
+* Added account flow to demonstrate the flows of interaction for creating an account and signing in.
+
