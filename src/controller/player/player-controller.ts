@@ -3,25 +3,46 @@ import PlayerView from "../../view/player/player-view.ts";
 import Upgrade from "../../domain/upgrade/upgrade.ts";
 
 export default class PlayerController {
-    #player: Player;
-    #playerView: PlayerView;
-    #upgrades: Upgrade[] = [];
+    #player!: Player;
+    #playerView!: PlayerView;
+    #upgrades: Upgrade[];
 
 
     constructor() {
-        this.#player = new Player();
-        this.#playerView = new PlayerView(this.#player, this);
-        this.#player.registerListener(this.#playerView);
-
+        this.#upgrades = [];
         this.#loadUpgrades();
     }
 
-    async #loadUpgrades() {
-        this.#upgrades = await Upgrade.getAllUpgrades();
-        this.#playerView.renderStore();
+    async login(username: string, password: string) {
+        this.#player = await Player.login(username, password);
+
+        this.#playerView = new PlayerView(
+            this.#player,
+            this
+        );
+
+        this.#player.registerListener(this.#playerView);
+        this.#player.notifyAll();
     }
 
-    
+    async register(username: string, password: string) {
+        this.#player = await Player.register(username, password);
+        
+        this.#playerView = new PlayerView(
+            this.#player,
+            this
+        );
+
+        this.#player.registerListener(this.#playerView);
+        this.#player.notifyAll();
+    }
+
+
+    async #loadUpgrades() {
+        this.#upgrades = await Upgrade.getAllUpgrades();
+    }
+
+
     get upgrades(): Upgrade[] {
         return this.#upgrades;
     }

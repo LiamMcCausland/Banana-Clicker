@@ -9,7 +9,11 @@ export default class PlayerView {
     constructor(player: Player, playerController: PlayerController) {
         this.#player = player;
         this.#playerController = playerController;
+
         this.createGameWrapper();
+    }
+
+    renderGame() {
         this.renderGamePanel();
         this.renderUpgradePanel();
         this.renderUpgrades();
@@ -118,12 +122,9 @@ export default class PlayerView {
     }
 
     notify() {
-        // Update banana count
+        console.log("refreshing game.");
+        
+        this.renderGame();
         document.querySelector("#banana-count")!.textContent = "Bananas: " + this.#player.bananas.toString();
-
-        this.renderUpgrades();
-
-        // Update upgrades available
-        this.renderStore();
     }
 }
