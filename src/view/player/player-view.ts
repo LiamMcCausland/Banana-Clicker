@@ -1,6 +1,5 @@
 import Player from "../../domain/player/player.ts";
 import PlayerController from "../../controller/player/player-controller.ts";
-import { ALL_UPGRADES } from "../../domain/upgrade/upgrade-list.ts";
 import Upgrade from "../../domain/upgrade/upgrade.ts"
 
 export default class PlayerView {
@@ -34,8 +33,8 @@ export default class PlayerView {
             dialogPopUp.appendChild(closeButton);
 
             closeButton.addEventListener('click', () => {dialogPopUp.close();});
-            
-            dialogPopUp.showModal(); 
+
+            dialogPopUp.showModal();
         }
     }
 
@@ -98,7 +97,7 @@ export default class PlayerView {
         const container = document.querySelector('#upgrades-list')!;
         container.innerHTML = '';
 
-        ALL_UPGRADES.forEach((upgrade: Upgrade) => {
+        for (const upgrade of this.#playerController.upgrades) {
             if (!this.#player.upgrades.includes(upgrade)) {
                 const button = document.createElement('button');
                 button.className = 'upgrade-item';
@@ -115,7 +114,7 @@ export default class PlayerView {
 
                 container.appendChild(button);
             }
-        });
+        }
     }
 
     notify() {

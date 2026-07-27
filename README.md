@@ -22,3 +22,4 @@ npx vite
 
 * <https://stackoverflow.com/questions/79688441/typescript-enum-alternative-following-the-use-of-erasablesyntaxonly-flag>
 * <https://vitest.dev/guide/>
+* https://www.geeksforgeeks.org/system-design/repository-design-pattern/

@@ -20,6 +20,12 @@ create table if not exists upgrade (
     modifier float not null
 );
 
+insert into upgrade (name, description, price, modifier)
+values
+    ('Double Click', 'Doubles the bananas per click', 100, 2.0),
+    ('Triple Click', 'Triples the bananas per click', 500, 3.0)
+on conflict (name) do nothing;
+   
 -- Tables for player ownership of buildings and upgrades:
 create table if not exists player_building (
     player varchar(255) not null references player(username),
