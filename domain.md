@@ -77,8 +77,9 @@ class BuildingName {
     Acuminata
     Balbisiana
 }
-    Player "1" o--o "*" Upgrade
-    Player "1" o--o "*" Building
+
+    Player "1" o--* "*" Upgrade
+    Player "1" o--* "*" Building
     Upgrade --> UpgradeName
     Building --> BuildingName
 ```
