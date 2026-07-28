@@ -21,21 +21,22 @@ flowchart TB
     end
 ```
 
-**Upgrade Purchase Flow:**
+**Upgrade/Building Purchase Flow:**
 
 ```mermaid
     flowchart TB
-    subgraph Upgrade Purchase Flow
+    subgraph Upgrade and Building Purchase Flow
         direction TB
         getAction2[[Choose Action]]
         purchaseU{Attempt Purchase}
-        purchaseSuccess[[Upgrade Purchased]]
+        purchaseSuccess[[Item Purchased]]
 
-        getAction2 -- Desired upgrade clicked --> purchaseU
+        getAction2 -- Desired upgrade/building clicked --> purchaseU
         purchaseU -. Not enough bananas, click for more! .-> getAction2
-        purchaseU -. Upgrade already purchased, choose another .-> getAction2
+        purchaseU -. Item has already been purchased, choose another .-> getAction2
         purchaseU -. Sufficient bananas .-> purchaseSuccess
     end
+
 ```
 **Account Flow**:
 
@@ -63,4 +64,5 @@ end
 * Seperate flows into two diagrams.
   * one for the purchase and one for clicking
 * Added account flow to demonstrate the flows of interaction for creating an account and signing in.
+* updated purchase flow to include buildings (essentially the exact same flow)
 
