@@ -1,12 +1,12 @@
 -- Players
-create table player(
+create if not exists table player(
   username varchar(255) not null unique,
   password varchar(255) not null,
   bananas integer not null default 0
 );
 
 -- Buildings owned by a player (one row per owned instance)
-create table building(
+create if not exists table building(
   id serial not null unique,
   name varchar(255) not null,
   description text not null,
@@ -16,8 +16,8 @@ create table building(
     on delete cascade
 );
 
--- Upgrades owned by a player (each upgrade type owned at most once)
-create table upgrade(
+-- Upgrades owned by a player
+create table if not exists upgrade(
   name varchar(255) not null,
   description text not null,
   price integer not null,
