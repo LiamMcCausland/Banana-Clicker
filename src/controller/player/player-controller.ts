@@ -1,17 +1,11 @@
 import Player from "../../domain/player/player.ts";
 import PlayerView from "../../view/player/player-view.ts";
 import Upgrade from "../../domain/upgrade/upgrade.ts";
+import Building from "../../domain/building/building.ts";
 
 export default class PlayerController {
     #player!: Player;
     #playerView!: PlayerView;
-    #upgrades: Upgrade[];
-
-
-    constructor() {
-        this.#upgrades = [];
-        this.#loadUpgrades();
-    }
 
     async login(username: string, password: string) {
         this.#player = await Player.login(username, password);
@@ -38,25 +32,27 @@ export default class PlayerController {
     }
 
 
-    async #loadUpgrades() {
-        this.#upgrades = await Upgrade.getAllUpgrades();
+    get upgrades() {
+        return Upgrade.getAllUpgrades();
     }
 
-
-    get upgrades(): Upgrade[] {
-        return this.#upgrades;
+    get buildings() {
+        return Building.getAllBuildings();
     }
 
-
-    // Called when button is clicked
     click() {
         this.#player.click();
     }
 
     // When upgrade is chosen
-    purchase(upgrade: Upgrade) {
+    purchaseUpgrade(upgrade: Upgrade) {
         this.#player.purchaseUpgrade(upgrade);
     }
+
+    purchaseBuilding(building: Building) {
+        this.#player.purchaseBuilding(building);
+    }
+        
 
     player() {
         return this.#player;

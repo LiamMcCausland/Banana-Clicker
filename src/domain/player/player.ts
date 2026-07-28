@@ -11,7 +11,6 @@ export default class Player {
     #listeners: Listener[];
     #username: string;
     #password: string;
-    #logged: boolean;
 
     constructor(username: string, password: string, bananas: number, upgrades: Upgrade[], buildings: Building[]) {
         this.#bananas = bananas;
@@ -20,7 +19,6 @@ export default class Player {
         this.#username = username;
         this.#password = password;
 
-        this.#logged = false;
         this.#listeners = [];
         this.checkPlayer();
     }
@@ -49,53 +47,24 @@ export default class Player {
         const row = result.rows[0];
 
         const upgradesResult = await db().query(
-            `
-        select u.*
-        from upgrade u
-        join player_upgrade pu
-        on u.name = pu.upgrade
-        where pu.player = $1
-        `,
+            'select * from upgrade where owner = $1',
             [username]);
 
         const buildingsResult = await db().query(
-            `
-        select b.*, pb.quantity
-        from building b
-        join player_building pb
-        on b.name = pb.building
-        where pb.player = $1
-        `,
+            'select * from building where owner = $1',
             [username]
         );
 
         const upgrades = upgradesResult.rows.map(row =>
-            new Upgrade(
-                row.name,
-                row.description,
-                row.price,
-                row.modifier
-            )
+            new Upgrade(row.name, row.description, row.price, row.modifier)
         );
 
 
         const buildings = buildingsResult.rows.map(row =>
-            new Building(
-                row.name,
-                row.description,
-                row.price,
-                row.bps,
-                row.quantity
-            )
+            new Building(row.name, row.description, row.price, row.bps)
         );
 
-        return new Player(
-            row.username,
-            row.password,
-            row.bananas,
-            upgrades,
-            buildings
-        );
+        return new Player(row.username, row.password, row.bananas, upgrades, buildings);
     }
 
     static async register(username: string, password: string) {
@@ -136,7 +105,7 @@ export default class Player {
         let success = false;
         if (!upgrade) {
             throw new UpgradeNotFoundException("Upgrade not found in shop");
-        } else if (this.#upgrades.includes(upgrade)) {
+        } else if (this.#upgrades.some(u => u.name === upgrade.name)) {
             throw new DuplicateUpgradeException("Player cant have duplicate upgrades, choose a different upgrade.")
         } else {
             if (this.#bananas >= upgrade.price) {
@@ -145,6 +114,26 @@ export default class Player {
                 success = true;
             } else {
                 throw new NotEnoughBananasException("Not enough bananas to purchase this upgrade, click for more!");
+            }
+        }
+
+        this.notifyAll();
+        this.checkPlayer();
+        this.save();
+        return success;
+    }
+
+    purchaseBuilding(building: Building): boolean {
+        let success = false;
+        if (!building) {
+            throw new BuildingNotFoundException("Building not found in shop");
+        } else {
+            if (this.#bananas >= building.price) {
+                this.#bananas -= building.price;
+                this.#buildings.push(building);
+                success = true;
+            } else {
+                throw new NotEnoughBananasException("Not enough bananas to purchase this building, click for more!");
             }
         }
 
@@ -168,20 +157,23 @@ export default class Player {
     }
 
     async save() {
+        for (let u of this.#upgrades) {
+            console.log(u);
+        }
         // Save player state to database
         this.checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);
 
         // Save upgrades to database
-        await db().query('delete from player_upgrade where player = $1', [this.#username]);
+        await db().query('delete from upgrade where owner = $1', [this.#username]);
         for (const upgrade of this.#upgrades) {
-            await db().query('insert into player_upgrade (player, upgrade) values ($1, $2)', [this.#username, upgrade.name]);
+            await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, this.#username]);
         }
 
         // Save buildings to database
-        await db().query('delete from player_building where player = $1', [this.#username]);
+        await db().query('delete from building where owner = $1', [this.#username]);
         for (const building of this.#buildings) {
-            await db().query('insert into player_building (player, building, quantity) values ($1, $2, $3)', [this.#username, building.name, building.quantity]);
+            await db().query('insert into building (name, description, price, bps, owner) values ($1, $2, $3, $4, $5)', [building.name, building.description, building.price, building.getBps(), this.#username]);
         }
     }
 }
@@ -203,6 +195,12 @@ export class DuplicateUpgradeException extends Error {
 }
 
 export class AccountNotFoundException extends Error {
+    constructor(message: string) {
+        super(message);
+    }
+}
+
+export class BuildingNotFoundException extends Error {
     constructor(message: string) {
         super(message);
     }

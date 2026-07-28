@@ -23,7 +23,7 @@ export default class PlayerView {
     purchase(upgrade: Upgrade) {
 
         try {
-            this.#playerController.purchase(upgrade);
+            this.#playerController.purchaseUpgrade(upgrade);
         } catch (e: any) {
             let dialogPopUp = document.createElement('dialog');
             const app = document.getElementById("app")!;

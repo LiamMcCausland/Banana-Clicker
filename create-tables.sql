@@ -1,12 +1,12 @@
 -- Players
-create if not exists table player(
+create table if not exists player(
   username varchar(255) not null unique,
   password varchar(255) not null,
   bananas integer not null default 0
 );
 
 -- Buildings owned by a player (one row per owned instance)
-create if not exists table building(
+create table if not exists building(
   id serial not null unique,
   name varchar(255) not null,
   description text not null,

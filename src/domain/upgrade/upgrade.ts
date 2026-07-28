@@ -1,5 +1,4 @@
 import assert from "../../assertions.ts";
-import db from "../persistence/connection.ts";
 
 export default class Upgrade {
     #modifier: number;
@@ -34,24 +33,16 @@ export default class Upgrade {
         return this.#name;
     }
 
-    static async getAllUpgrades(): Promise<Upgrade[]> {
-        let upgrades: Upgrade[] = [];
-        
-        const { rows } = await db().query<{
-            name: string;
-            description: string;
-            price: number;
-            modifier: number;
-        }>("select * from upgrade;");
+    get description() {
+        return this.#description;
+    }
 
-        console.log("Retrieved upgrades from database:", rows); // Log the retrieved rows for debugging
+    // Returns all available upgrades
+    static getAllUpgrades(): Upgrade[] {
+        return [
+            new Upgrade("Double Click", "Double bananas per click", 50, 2),
+            new Upgrade("Triple Click", "Triple bananas per click", 100, 3),
+        ];
+    }
 
-        for (const row of rows) {
-            const upgrade = new Upgrade(row.name, row.description, row.price, row.modifier);
-            upgrades.push(upgrade);
-        }
-        
-        
-        return upgrades;
-   }
 }
