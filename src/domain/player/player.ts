@@ -35,6 +35,13 @@ export default class Player {
         const hasNoDuplicates = new Set(this.#upgrades.map(upgrade => upgrade.name)).size === this.#upgrades.length;
         assert(hasNoDuplicates, "Player cant have duplicate upgrades");
 
+        assert(this.#buildings !== null, "Buildings cannot be null");
+        assert(this.#username !== null && this.#username !== "", "Username cannot be null or empty");
+        assert(this.#password !== null && this.#password !== "", "Password cannot be null or empty");
+
+        //Check if it contains whitespace
+        assert(!/\s/.test(this.#username), "Username cannot contain whitespace");
+        assert(!/\s/.test(this.#password), "Password cannot contain whitespace");
     }
 
     static async login(username: string, password: string) {
@@ -92,15 +99,22 @@ export default class Player {
 
         this.#bananas += bananasClicked;
         this.checkPlayer();
-
-        //persist player state to database:
-        this.save();
-
-        // update listensers for banana count change
         this.notifyAll();
     }
 
-    purchaseUpgrade(upgrade: Upgrade): boolean {
+    tick() {
+        let bananasPerSecond = 0;
+
+        for (const building of this.#buildings) {
+            bananasPerSecond += building.bps;
+        }
+
+        this.#bananas += bananasPerSecond;
+        this.checkPlayer();
+        this.notifyAll();
+    }
+
+    purchaseUpgrade(upgrade: Upgrade) {
 
         let success = false;
         if (!upgrade) {
@@ -119,11 +133,10 @@ export default class Player {
 
         this.notifyAll();
         this.checkPlayer();
-        this.save();
         return success;
     }
 
-    purchaseBuilding(building: Building): boolean {
+    purchaseBuilding(building: Building) {
         let success = false;
         if (!building) {
             throw new BuildingNotFoundException("Building not found in shop");
@@ -139,7 +152,6 @@ export default class Player {
 
         this.notifyAll();
         this.checkPlayer();
-        this.save();
         return success;
     }
 
@@ -151,30 +163,37 @@ export default class Player {
         return this.#upgrades;
     }
 
+    get buildings() {
+        return this.#buildings;
+    }
+
     set bananas(val: number) {
         this.#bananas = val;
         this.checkPlayer();
     }
 
     async save() {
-        for (let u of this.#upgrades) {
-            console.log(u);
-        }
+        console.log("SAVE START", performance.now());
+        
         // Save player state to database
         this.checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);
 
+        console.log(this.#upgrades.map(u => u.name));
+
         // Save upgrades to database
         await db().query('delete from upgrade where owner = $1', [this.#username]);
         for (const upgrade of this.#upgrades) {
-            await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, this.#username]);
+                await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, this.#username]);
         }
 
         // Save buildings to database
         await db().query('delete from building where owner = $1', [this.#username]);
         for (const building of this.#buildings) {
-            await db().query('insert into building (name, description, price, bps, owner) values ($1, $2, $3, $4, $5)', [building.name, building.description, building.price, building.getBps(), this.#username]);
+            await db().query('insert into building (name, description, price, bps, owner) values ($1, $2, $3, $4, $5)', [building.name, building.description, building.price, building.bps, this.#username]);
         }
+        console.log("SAVE END", performance.now());
+        throw new Error("Save complete");
     }
 }
 

@@ -22,4 +22,5 @@ npx vite
 
 * <https://stackoverflow.com/questions/79688441/typescript-enum-alternative-following-the-use-of-erasablesyntaxonly-flag>
 * <https://vitest.dev/guide/>
-* https://www.geeksforgeeks.org/system-design/repository-design-pattern/
+* <https://www.geeksforgeeks.org/system-design/repository-design-pattern/>
+* <https://stackoverflow.com/questions/13212625/typescript-function-overloading>

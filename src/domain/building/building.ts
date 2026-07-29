@@ -21,12 +21,20 @@ export default class Building {
         assert(this.#name !== null && this.#name !== "", "Name cannot be null or empty");
     }
 
-    getBps() {
+    get bps() {
         return this.#bananasPerSecond;
     }
 
     get price() {
         return this.#price;
+    }
+
+    get name() {
+        return this.#name;
+    }
+
+    get description() {
+        return this.#description;
     }
 
     static getAllBuildings(): Building[] {
