@@ -1,7 +1,8 @@
 -- Players
 create table if not exists player(
   username varchar(255) not null unique,
-  password varchar(255) not null,
+  password_hash text not null,
+  password_salt text not null,
   bananas integer not null default 0
 );
 

@@ -14,6 +14,7 @@ export default class Building {
         this.checkBuilding();
     }
 
+    // Check invariants for the Building class
     checkBuilding() {
         assert(this.#description !== null && this.#description !== "", "Description cannot be null or empty");
         assert(this.#bananasPerSecond >= 1, "Bananas per second must be greater than or equal to 1");
@@ -37,6 +38,7 @@ export default class Building {
         return this.#description;
     }
 
+    // Returns all possible buildings in the game
     static getAllBuildings(): Building[] {
         return [
             new Building("Acuminata", "A sturdy banana tree", 100, 1),

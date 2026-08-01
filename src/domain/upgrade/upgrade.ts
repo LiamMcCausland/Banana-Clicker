@@ -37,7 +37,7 @@ export default class Upgrade {
         return this.#description;
     }
 
-    // Returns all available upgrades
+    // Returns all available upgrades in the game
     static getAllUpgrades(): Upgrade[] {
         return [
             new Upgrade("Double Click", "Double bananas per click", 50, 2),

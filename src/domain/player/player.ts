@@ -1,8 +1,10 @@
-import Upgrade from "../upgrade/upgrade.ts"
-import assert from "../../assertions.ts";
+import Upgrade from "../upgrade/upgrade";
+import Building from "../building/building";
 import db from "../persistence/connection.ts";
+import { hashPassword, verifyPassword, generateSalt } from "../security/hash.ts";
+import assert from "../../assertions.ts";
 import type Listener from "../listener/listener.ts";
-import Building from "../building/building.ts";
+
 
 export default class Player {
     #bananas: number;
@@ -10,19 +12,22 @@ export default class Player {
     #buildings: Building[];
     #listeners: Listener[];
     #username: string;
-    #password: string;
+    #passwordHash: string;
+    #passwordSalt: string;
 
-    constructor(username: string, password: string, bananas: number, upgrades: Upgrade[], buildings: Building[]) {
+    constructor(username: string, passwordHash: string, passwordSalt: string, bananas: number, upgrades: Upgrade[], buildings: Building[]) {
         this.#bananas = bananas;
         this.#upgrades = upgrades;
         this.#buildings = buildings;
         this.#username = username;
-        this.#password = password;
+        this.#passwordHash = passwordHash;
+        this.#passwordSalt = passwordSalt;
 
         this.#listeners = [];
         this.checkPlayer();
     }
 
+    // Check player invariants
     checkPlayer() {
         assert(this.#bananas >= 0, "Bananas cannot be negative");
         assert(this.#upgrades !== null, "Upgrades cannot be null");
@@ -31,59 +36,81 @@ export default class Player {
             assert(upgrade !== null, "Upgrade cannot be null");
         }
 
-        // check no duplicate upgrades
         const hasNoDuplicates = new Set(this.#upgrades.map(upgrade => upgrade.name)).size === this.#upgrades.length;
         assert(hasNoDuplicates, "Player cant have duplicate upgrades");
 
         assert(this.#buildings !== null, "Buildings cannot be null");
         assert(this.#username !== null && this.#username !== "", "Username cannot be null or empty");
-        assert(this.#password !== null && this.#password !== "", "Password cannot be null or empty");
-
-        //Check if it contains whitespace
         assert(!/\s/.test(this.#username), "Username cannot contain whitespace");
-        assert(!/\s/.test(this.#password), "Password cannot contain whitespace");
+
+        assert(this.#passwordHash !== null && this.#passwordHash !== "", "Password hash cannot be null or empty");
+        assert(this.#passwordSalt !== null && this.#passwordSalt !== "", "Password salt cannot be null or empty");
     }
 
+    
+    // Logs in a player with the given username and password, returning a Player instance if successful
     static async login(username: string, password: string) {
-        const result = await db().query(`select * from player where username = $1 and password = $2`, [username, password]);
+        const result = await db().query(
+            `select * from player where username = $1`,
+            [username]
+        );
 
+        // Check if the player exists, if not throw an exception
         if (result.rows.length === 0) {
-            throw new AccountNotFoundException("Invalid login");
+            throw new AccountNotFoundException("Couldn't find account with those credentials");
         }
 
         const row = result.rows[0];
 
+        // Verify the password using the stored salt and hash
+        const isValid = await verifyPassword(password, row.password_salt, row.password_hash);
+        if (!isValid) {
+            throw new AccountNotFoundException("Password Incorrect.");
+        }
+
+        // Fetch the player's upgrades and buildings from the database
         const upgradesResult = await db().query(
             'select * from upgrade where owner = $1',
-            [username]);
-
+            [username]
+        );
+        
         const buildingsResult = await db().query(
             'select * from building where owner = $1',
             [username]
         );
 
+        // Map the database rows to Upgrade and Building instances
         const upgrades = upgradesResult.rows.map(row =>
             new Upgrade(row.name, row.description, row.price, row.modifier)
         );
-
 
         const buildings = buildingsResult.rows.map(row =>
             new Building(row.name, row.description, row.price, row.bps)
         );
 
-        return new Player(row.username, row.password, row.bananas, upgrades, buildings);
+        // Return a new Player instance with the retrieved data
+        return new Player(row.username, row.password_hash, row.password_salt, row.bananas, upgrades, buildings);
     }
 
+    // Registers a new player in the database and returns a new Player instance
     static async register(username: string, password: string) {
-        await db().query('insert into player (username, password, bananas) values ($1, $2, $3)', [username, password, 0]);
+        const salt = generateSalt();
+        const hash = await hashPassword(password, salt);
 
-        return new Player(username, password, 0, [], []);
+        await db().query(
+            'insert into player (username, password_hash, password_salt, bananas) values ($1, $2, $3, $4)',
+            [username, hash, salt, 0]
+        );
+
+        return new Player(username, hash, salt, 0, [], []);
     }
 
+    // Registers a listener to be notified of changes to the player state
     registerListener(listener: Listener) {
         this.#listeners.push(listener);
     }
 
+    // Notifies all registerd listensers of changes
     notifyAll() {
         this.#listeners.forEach((l) => l.notify());
     }
@@ -102,6 +129,7 @@ export default class Player {
         this.notifyAll();
     }
 
+    // Run every second, adding bananas based on buildings owned, returns the amount of bananas redeemed.
     tick() {
         let bananasPerSecond = 0;
 
@@ -114,6 +142,7 @@ export default class Player {
         this.notifyAll();
     }
 
+    // Purchases an upgrade from the shop, returns true if successful, false if not.
     purchaseUpgrade(upgrade: Upgrade) {
 
         let success = false;
@@ -136,6 +165,7 @@ export default class Player {
         return success;
     }
 
+    // Purchases a building from the shop, returns true if successful, false if not.
     purchaseBuilding(building: Building) {
         let success = false;
         if (!building) {
@@ -172,19 +202,17 @@ export default class Player {
         this.checkPlayer();
     }
 
+    // Save player state to the database, including upgrades and buildings
     async save() {
-        console.log("SAVE START", performance.now());
         
         // Save player state to database
         this.checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);
 
-        console.log(this.#upgrades.map(u => u.name));
-
         // Save upgrades to database
         await db().query('delete from upgrade where owner = $1', [this.#username]);
         for (const upgrade of this.#upgrades) {
-                await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, this.#username]);
+            await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, this.#username]);
         }
 
         // Save buildings to database
@@ -192,10 +220,11 @@ export default class Player {
         for (const building of this.#buildings) {
             await db().query('insert into building (name, description, price, bps, owner) values ($1, $2, $3, $4, $5)', [building.name, building.description, building.price, building.bps, this.#username]);
         }
-        console.log("SAVE END", performance.now());
         throw new Error("Save complete");
     }
 }
+
+// Custom exceptions for player actions:
 
 export class NotEnoughBananasException extends Error {
     constructor(message: string) {

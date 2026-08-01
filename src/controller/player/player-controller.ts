@@ -12,9 +12,11 @@ export default class PlayerController {
     constructor(output: OutputHandler) {
         this.#output = output;
 
+        // set an interval to call the tick method every second for buildings
         setInterval(() => this.tick(), 1000);
     }
 
+    // Login the player and create a new PlayerView for the player
     async login(username: string, password: string) {
         this.#player = await Player.login(username, password);
 
@@ -28,6 +30,7 @@ export default class PlayerController {
         this.#player.notifyAll();
     }
 
+    // Register a new player and create a new PlayerView for the player
     async register(username: string, password: string) {
         this.#player = await Player.register(username, password);
 
@@ -41,14 +44,17 @@ export default class PlayerController {
         this.#player.notifyAll();
     }
 
+    // When banana is clicked
     click() {
         this.#player.click();
     }
 
+    // When tick is called, add bananas based on buildings owned
     tick() {
         this.#player.tick();
     }
 
+    // When save is called, save the player to the database
     async save() {
         try {
             await this.#player.save();
@@ -62,10 +68,12 @@ export default class PlayerController {
         this.#player.purchaseUpgrade(upgrade);
     }
 
+    // When building is chosen
     purchaseBuilding(building: Building) {
         this.#player.purchaseBuilding(building);
     }
 
+    // getters:
     get player() {
         return this.#player;
     }
