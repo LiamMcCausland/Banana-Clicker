@@ -2,7 +2,6 @@ import { expect, test } from 'vitest'
 import Player from '../domain/player/player.ts'
 import Upgrade from '../domain/upgrade/upgrade.ts'
 import db from '../domain/persistence/connection.ts';
-import type { worker } from '@electric-sql/pglite/worker';
 const username = "testuser";
 const passwordHash = "testhash";
 const passwordSalt = "testsalt";

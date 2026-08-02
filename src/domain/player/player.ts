@@ -4,7 +4,7 @@ import db from "../persistence/connection.ts";
 import { hashPassword, verifyPassword, generateSalt } from "../security/hash.ts";
 import assert from "../../assertions.ts";
 import type Listener from "../listener/listener.ts";
-
+import { AccountNotFoundException, NotEnoughBananasException, DuplicateUpgradeException, UpgradeNotFoundException, BuildingNotFoundException } from "../../exceptions/exceptions.ts";
 
 export default class Player {
     #bananas: number;
@@ -24,11 +24,11 @@ export default class Player {
         this.#passwordSalt = passwordSalt;
 
         this.#listeners = [];
-        this.checkPlayer();
+        this.#checkPlayer();
     }
 
     // Check player invariants
-    checkPlayer() {
+    #checkPlayer() {
         assert(this.#bananas >= 0, "Bananas cannot be negative");
         assert(this.#upgrades !== null, "Upgrades cannot be null");
 
@@ -228,32 +228,3 @@ export default class Player {
     }
 }
 
-// Custom exceptions for player actions:
-
-export class NotEnoughBananasException extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
-export class UpgradeNotFoundException extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
-export class DuplicateUpgradeException extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
-
-export class AccountNotFoundException extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
-
-export class BuildingNotFoundException extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}

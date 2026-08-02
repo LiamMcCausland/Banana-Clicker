@@ -11,11 +11,11 @@ export default class Building {
         this.#description = description;
         this.#price = price;
         this.#bananasPerSecond = bananasPerSecond;
-        this.checkBuilding();
+        this.#checkBuilding();
     }
 
     // Check invariants for the Building class
-    checkBuilding() {
+    #checkBuilding() {
         assert(this.#description !== null && this.#description !== "", "Description cannot be null or empty");
         assert(this.#bananasPerSecond >= 1, "Bananas per second must be greater than or equal to 1");
         assert(this.#price >= 0, "Price must be greater than or equal to 0");

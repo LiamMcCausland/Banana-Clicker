@@ -14,19 +14,19 @@ export default class PlayerView {
         this.#playerController = playerController;
         this.#output = output;
 
-        this.createGameWrapper();
+        this.#createGameWrapper();
     }
 
-    renderGame() {
-        this.renderGamePanel();
-        this.renderStorePanel();
-        this.renderPurchasedUpgrades();
-        this.renderPurchasedBuildings();
-        this.renderStore();
-        this.renderSaveButton();
+    #renderGame() {
+        this.#renderGamePanel();
+        this.#renderStorePanel();
+        this.#renderPurchasedUpgrades();
+        this.#renderPurchasedBuildings();
+        this.#renderStore();
+        this.#renderSaveButton();
     }
 
-    purchase(item: any): void {
+    #purchase(item: any): void {
 
         try {
             if (item instanceof Upgrade) {
@@ -42,7 +42,7 @@ export default class PlayerView {
 
 
 
-    createGameWrapper() {
+    #createGameWrapper() {
         const app = document.getElementById("app")!;
         const gameWrapper = document.createElement("div");
         gameWrapper.className = "game-wrapper";
@@ -51,7 +51,7 @@ export default class PlayerView {
     }
 
 
-    renderStorePanel() {
+    #renderStorePanel() {
         const gameWrapper = document.querySelector('.game-wrapper')!;
         const upgradePanel = document.createElement('div');
         upgradePanel.className = 'upgrades-panel';
@@ -66,7 +66,7 @@ export default class PlayerView {
     }
 
     // renders the main game panel with banana count, purchased upgrades, and banana button
-    renderGamePanel() {
+    #renderGamePanel() {
         const playerPanel = document.createElement("div");
         const mainContainer = document.querySelector(".game-wrapper")!;
         mainContainer.innerHTML = `      <div class="game-main">
@@ -88,7 +88,7 @@ export default class PlayerView {
 
 
     // renders the purhcased upgrades under the banana count
-    renderPurchasedUpgrades() {
+    #renderPurchasedUpgrades() {
         if (this.#player.upgrades && this.#player.upgrades.length > 0) {
 
             document.querySelector("#purchased-upgrades")!.innerHTML = "";
@@ -102,7 +102,7 @@ export default class PlayerView {
         }
     }
 
-    renderPurchasedBuildings() {
+    #renderPurchasedBuildings() {
         if (this.#player.buildings && this.#player.buildings.length > 0) {
             let gameMain = document.querySelector(".game-main")!;
             let buildingsContainer = document.createElement("div");
@@ -126,7 +126,7 @@ export default class PlayerView {
     }
 
 
-    renderStore() {
+    #renderStore() {
 
         const container = document.querySelector('#upgrades-list')!;
         container.innerHTML = '';
@@ -145,7 +145,7 @@ export default class PlayerView {
       <div class="upgrade-cost">${upgrade.price}</div>
     `;
 
-                button.addEventListener('click', () => this.purchase(upgrade));
+                button.addEventListener('click', () => this.#purchase(upgrade));
 
                 container.appendChild(button);
             }
@@ -182,13 +182,13 @@ export default class PlayerView {
             button.prepend(imgElement);
 
 
-            button.addEventListener('click', () => this.purchase(building));
+            button.addEventListener('click', () => this.#purchase(building));
 
             buildingContainer.appendChild(button);
         }
     }
 
-    renderSaveButton() {
+    #renderSaveButton() {
         const saveButton = document.createElement('button');
         saveButton.id = 'save-button';
         saveButton.textContent = 'Save Game';
@@ -200,7 +200,7 @@ export default class PlayerView {
     notify() {
         console.log("refreshing game.");
 
-        this.renderGame();
+        this.#renderGame();
         document.querySelector("#banana-count")!.textContent = "Bananas: " + this.#player.bananas.toString();
     }
 }
