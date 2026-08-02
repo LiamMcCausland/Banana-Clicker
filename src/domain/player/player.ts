@@ -202,6 +202,10 @@ export default class Player {
         this.checkPlayer();
     }
 
+    get username() {
+        return this.#username;
+    }
+
     // Save player state to the database, including upgrades and buildings
     async save() {
         

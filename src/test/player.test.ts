@@ -1,6 +1,8 @@
 import { expect, test } from 'vitest'
 import Player from '../domain/player/player.ts'
 import Upgrade from '../domain/upgrade/upgrade.ts'
+import db from '../domain/persistence/connection.ts';
+import type { worker } from '@electric-sql/pglite/worker';
 const username = "testuser";
 const passwordHash = "testhash";
 const passwordSalt = "testsalt";
@@ -105,5 +107,27 @@ test('Purchasing notifies listeners', () => {
     expect(notified).toBe(true);
 });
 
+test('register player with valid username and password', async () => {
+    const username = "newuser";
+    const password = "newpassword";
+    const player = await Player.register(username, password);
+
+    // check database
+    const result = await db().query('select * from player where username = $1', [username]);
+    expect(result.rows.length).toBe(1);
+    expect(result.rows[0].username).toBe(username);
+});
+
+test('register player and login with correct password', async () => {
+    const username = "loginuser";
+    const password = "loginpassword";
+    await Player.register(username, password);
+    const result = await db().query('select * from player where username = $1', [username]);
+    expect(result.rows.length).toBe(1);
+    expect(result.rows[0].username).toBe(username);
+
+    const loggedInPlayer = await Player.login(username, password);
+    expect(loggedInPlayer.username).toBe(username);
+});
 
 

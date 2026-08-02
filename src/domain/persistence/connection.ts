@@ -1,10 +1,17 @@
-import { PGlite } from "@electric-sql/pglite"
+import { PGlite } from "@electric-sql/pglite";
+import ddl from '../../../create-tables.sql?raw';
 
-// Create a PGlite database instance
-const pgliteDb = await PGlite.create('idb://2452-clicker');
+let src = import.meta.env.VITE_DATABASE_URL;
 
-// Export a function that returns the PGlite database instance
+
+const pgliteDb = await PGlite.create(src);
+
+// in the test environment we need to populate the tables
+// in our databse:
+if(src == 'memory://'){
+    db().exec(ddl);
+}
+
 export default function db(){
     return pgliteDb;
 }
-
