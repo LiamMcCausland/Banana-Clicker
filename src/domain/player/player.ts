@@ -125,7 +125,7 @@ export default class Player {
         }
 
         this.#bananas += bananasClicked;
-        this.checkPlayer();
+        this.#checkPlayer();
         this.notifyAll();
     }
 
@@ -138,7 +138,7 @@ export default class Player {
         }
 
         this.#bananas += bananasPerSecond;
-        this.checkPlayer();
+        this.#checkPlayer();
         this.notifyAll();
     }
 
@@ -161,7 +161,7 @@ export default class Player {
         }
 
         this.notifyAll();
-        this.checkPlayer();
+        this.#checkPlayer();
         return success;
     }
 
@@ -181,7 +181,7 @@ export default class Player {
         }
 
         this.notifyAll();
-        this.checkPlayer();
+        this.#checkPlayer();
         return success;
     }
 
@@ -199,7 +199,7 @@ export default class Player {
 
     set bananas(val: number) {
         this.#bananas = val;
-        this.checkPlayer();
+        this.#checkPlayer();
     }
 
     get username() {
@@ -210,7 +210,7 @@ export default class Player {
     async save() {
         
         // Save player state to database
-        this.checkPlayer();
+        this.#checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);
 
         // Save upgrades to database

@@ -11,9 +11,6 @@ export default class PlayerController {
 
     constructor(output: OutputHandler) {
         this.#output = output;
-
-        // set an interval to call the tick method every second for buildings
-        setInterval(() => this.tick(), 1000);
     }
 
     // Login the player and create a new PlayerView for the player
@@ -28,6 +25,7 @@ export default class PlayerController {
 
         this.#player.registerListener(this.#playerView);
         this.#player.notifyAll();
+        setInterval(() => this.tick(), 1000);
     }
 
     // Register a new player and create a new PlayerView for the player
@@ -42,6 +40,7 @@ export default class PlayerController {
 
         this.#player.registerListener(this.#playerView);
         this.#player.notifyAll();
+        setInterval(() => this.tick(), 1000);
     }
 
     // When banana is clicked
