@@ -197,7 +197,7 @@ export default class Player {
         this.#checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);
 
-        // Save upgrades and buildings
+        // Tell upgrades and buildings to save themselves to the database under this player's username
         await Upgrade.save(this.#upgrades, this.#username);
         await Building.save(this.#buildings, this.#username);
 
