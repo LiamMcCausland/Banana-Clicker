@@ -1,4 +1,5 @@
 import assert from "../../assertions.ts";
+import db from "../persistence/connection.ts"
 
 export default class Building {
     #name: string;
@@ -36,6 +37,31 @@ export default class Building {
 
     get description() {
         return this.#description;
+    }
+
+    // Fetches the list of buildings that the given username owns.
+    static async fetchBuildings(username: string) {
+        const buildingsResult = await db().query(
+            'select * from building where owner = $1',
+            [username]
+        );
+
+
+        const buildings = buildingsResult.rows.map(row =>
+            new Building(row.name, row.description, row.price, row.bps)
+        );
+
+        return buildings;
+
+    }
+
+    // Saves the given list of buildings to the databse under the given username
+    static async save(buildings: Building[], username: string) {
+        // Save buildings to database
+        await db().query('delete from building where owner = $1', [username]);
+        for (const building of buildings) {
+            await db().query('insert into building (name, description, price, bps, owner) values ($1, $2, $3, $4, $5)', [building.name, building.description, building.price, building.bps, username]);
+        }
     }
 
     // Returns all possible buildings in the game

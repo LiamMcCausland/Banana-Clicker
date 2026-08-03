@@ -1,4 +1,6 @@
 import assert from "../../assertions.ts";
+import Player from "../player/player.ts";
+import db from "../persistence/connection.ts";
 
 export default class Upgrade {
     #modifier: number;
@@ -35,6 +37,29 @@ export default class Upgrade {
 
     get description() {
         return this.#description;
+    }
+
+    // Fetches the upgrades for the given username
+    static async fetchUpgrades(username: string) {
+        const upgradesResult = await db().query(
+            'select * from upgrade where owner = $1',
+            [username]
+        );
+
+        // Map the database rows to Upgrade and Building instances
+        const upgrades = upgradesResult.rows.map(row =>
+            new Upgrade(row.name, row.description, row.price, row.modifier));
+
+        return upgrades;
+    }
+
+    // Saves the given lsit of upgrades to the database under the username given.
+    static async save(upgrades: Upgrade[], username: string) {
+        // Save upgrades to database
+        await db().query('delete from upgrade where owner = $1', [username]);
+        for (const upgrade of upgrades) {
+            await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, username]);
+        }
     }
 
     // Returns all available upgrades in the game

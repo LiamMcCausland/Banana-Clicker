@@ -69,25 +69,9 @@ export default class Player {
         }
 
         // Fetch the player's upgrades and buildings from the database
-        const upgradesResult = await db().query(
-            'select * from upgrade where owner = $1',
-            [username]
-        );
-        
-        const buildingsResult = await db().query(
-            'select * from building where owner = $1',
-            [username]
-        );
-
-        // Map the database rows to Upgrade and Building instances
-        const upgrades = upgradesResult.rows.map(row =>
-            new Upgrade(row.name, row.description, row.price, row.modifier)
-        );
-
-        const buildings = buildingsResult.rows.map(row =>
-            new Building(row.name, row.description, row.price, row.bps)
-        );
-
+        const upgrades = await Upgrade.fetchUpgrades(username);
+        const buildings = await Building.fetchBuildings(username);
+       
         // Return a new Player instance with the retrieved data
         return new Player(row.username, row.password_hash, row.password_salt, row.bananas, upgrades, buildings);
     }
@@ -213,17 +197,10 @@ export default class Player {
         this.#checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);
 
-        // Save upgrades to database
-        await db().query('delete from upgrade where owner = $1', [this.#username]);
-        for (const upgrade of this.#upgrades) {
-            await db().query('insert into upgrade (name, description, price, modifier, owner) values ($1, $2, $3, $4, $5)', [upgrade.name, upgrade.description, upgrade.price, upgrade.modifier, this.#username]);
-        }
+        // Save upgrades and buildings
+        await Upgrade.save(this.#upgrades, this.#username);
+        await Building.save(this.#buildings, this.#username);
 
-        // Save buildings to database
-        await db().query('delete from building where owner = $1', [this.#username]);
-        for (const building of this.#buildings) {
-            await db().query('insert into building (name, description, price, bps, owner) values ($1, $2, $3, $4, $5)', [building.name, building.description, building.price, building.bps, this.#username]);
-        }
         throw new Error("Save complete");
     }
 }
