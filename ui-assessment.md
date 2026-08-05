@@ -20,7 +20,7 @@ Here's my entire UI for phase 1:
 ## Phase 1 feedback
 
 * My initial implementation of this UI had adequate feedback:
-  * :0: There is no user input at this point so nothing to give feedback on there.
+  * :+1:? There is no user input at this point so nothing to give feedback on there.
   * :+1: Purchasing upgrades either informs the user they do not have enough bananas or purchases the upgrade and displays it under the count.
   * :+1: Error messages are clear and inform the user what went wrong.
 
@@ -35,8 +35,9 @@ Here's my entire UI for phase 1:
 Here are the major new parts of my interface for phase 2:
 
 ![The log in screen.](phase2-login.png)
-
+![Log in screen erorr feedback.](phase2-login-feedback.png)
 ![The game screen.](phase2-gamescreen.png)
+![Save complete message.](phase2-save.png)
 
 ## Changes from phase 1
 
@@ -59,7 +60,7 @@ Here are the major new parts of my interface for phase 2:
 ## Phase 2 consistency
 
 * :+1: The new login UI keeps the consistency from the game screen (colors, verbs, etc).
-* :-1?: Error message appear as red text in the login box instead of popups in the game screen, though the seperation between in game and logging in could keep this clear. (and abstract consistency with how a login screen should behave).
+* :-1:? Error message appear as red text in the login box instead of popups in the game screen, though the seperation between in game and logging in could keep this clear. (and abstract consistency with how a login screen should behave).
 
 ## How I might change my UI
 
