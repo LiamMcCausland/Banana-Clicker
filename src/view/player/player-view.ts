@@ -126,13 +126,14 @@ export default class PlayerView {
     }
 
 
-    #renderStore() {
+    async #renderStore() {
 
         const container = document.querySelector('#upgrades-list')!;
         container.innerHTML = '';
+        const upgrades = await this.#playerController.newGetAllUpgrades();
 
         // Render available upgrades
-        for (const upgrade of this.#playerController.upgrades) {
+        for (const upgrade of upgrades) {
             if (!this.#player.upgrades.some(u => u.name === upgrade.name)) {
                 const button = document.createElement('button');
                 button.className = 'upgrade-item';
@@ -154,8 +155,9 @@ export default class PlayerView {
         // Render available buildings
         const buildingContainer = document.querySelector('#buildings-list')!;
         buildingContainer.innerHTML = '';
+        const buildings = await this.#playerController.newGetAllBuildings();
 
-        for (const building of this.#playerController.buildings) {
+        for (const building of buildings) {
 
             // Grab amount owned
             let owned = this.#player.buildings.filter(b => b.name === building.name).length;
@@ -198,8 +200,6 @@ export default class PlayerView {
     }
 
     notify() {
-        console.log("refreshing game.");
-
         this.#renderGame();
         document.querySelector("#banana-count")!.textContent = "Bananas: " + this.#player.bananas.toString();
     }

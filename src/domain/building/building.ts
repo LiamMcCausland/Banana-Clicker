@@ -71,5 +71,10 @@ export default class Building {
             new Building("Balbisiana", "A productive banana tree", 200, 2),
         ];
     }
+
+    static async newGetAllBuildings(): Promise<Building[]> {
+        const result = await db().query('select * from purchaseable_buildings');
+        return result.rows.map(row => new Building(row.name, row.description, row.price, row.bps));
+    }
 }
 

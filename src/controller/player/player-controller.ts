@@ -86,4 +86,12 @@ export default class PlayerController {
     get buildings() {
         return Building.getAllBuildings();
     }
+
+    async newGetAllBuildings() {
+        return await Building.newGetAllBuildings();
+    }
+
+    async newGetAllUpgrades() {
+        return await Upgrade.newGetAllUpgrades();
+    }
 }

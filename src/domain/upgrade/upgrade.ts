@@ -70,4 +70,12 @@ export default class Upgrade {
         ];
     }
 
+    static async newGetAllUpgrades(): Promise<Upgrade[]> {
+        const upgradesResult = await db().query("select * from purchaseable_upgrades");
+        const upgrades: Upgrade[] = [];
+        for (const row of upgradesResult.rows) {
+            upgrades.push(new Upgrade(row.name, row.description, row.price, row.modifier));
+        }
+        return upgrades;
+    }
 }
