@@ -35,7 +35,7 @@ Here's my entire UI for phase 1:
 Here are the major new parts of my interface for phase 2:
 
 ![The log in screen.](phase2-login.png)
-
+![Log in screen erorr feedback.](phase2-login-feedback.png)
 ![The game screen.](phase2-gamescreen.png)
 
 ## Changes from phase 1
