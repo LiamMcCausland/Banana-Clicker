@@ -4,6 +4,10 @@ author: Liam McCausland (mccausll@myumanitoba.ca)
 date: Winter 2026
 ---
 
+
+![The main game screen](phase2-gamescreen.png)
+
+
 # Running
 
 You can start my app using `npm` and `npx`:
@@ -13,10 +17,21 @@ npm install
 npx vite
 ```
 
+---
+
+You can start my markov chain application using `node`:
+
+```
+node chain.ts
+```
+
+the matrix output can be seen in the `output-matrix.csv`.
+
 # Other docs
 
 * You can find my domain model in `domain.md`.
 * You can find my flows of interaction in `flows.md`.
+* You can fine my ui assessment in `ui-assessment.md`.
 
 # Sources
 
@@ -26,4 +41,4 @@ npx vite
 * <https://stackoverflow.com/questions/13212625/typescript-function-overloading>
 * <https://stackoverflow.com/questions/61900412/how-is-nodes-crypto-pbkdf2-supposed-to-work>
 * <https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest>
-
+* <https://stackoverflow.com/questions/30144580/typescript-multidimensional-array-initialization>
