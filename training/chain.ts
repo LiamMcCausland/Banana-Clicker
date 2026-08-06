@@ -2,10 +2,10 @@ import * as fs from 'fs';
 
 class MarkovChain {
     // maps current word to the next word and marks its transition count
-    private chain = new Map<string, Map<string, number>>();
+    #chain = new Map<string, Map<string, number>>();
 
     // maps the current word to the total number of transitions from that word
-    private totals = new Map<string, number>();
+    #totals = new Map<string, number>();
 
     /**
      * Trains the model using an array of sequential string tokens
@@ -16,20 +16,20 @@ class MarkovChain {
             const next = states[i + 1];
 
             // Ensure the current state exists in the chain and totals maps
-            if (!this.chain.has(current)) {
-                this.chain.set(current, new Map());
-                this.totals.set(current, 0);
+            if (!this.#chain.has(current)) {
+                this.#chain.set(current, new Map());
+                this.#totals.set(current, 0);
             }
 
             // Get the transition map for the current state
-            const transitions = this.chain.get(current)!;
+            const transitions = this.#chain.get(current)!;
             const count = transitions.get(next) || 0;
 
             // Increment the transition count for the next state
             transitions.set(next, count + 1);
 
             // Increment the total transition count for the current state
-            this.totals.set(current, this.totals.get(current)! + 1);
+            this.#totals.set(current, this.#totals.get(current)! + 1);
         }
     }
 
@@ -64,8 +64,8 @@ class MarkovChain {
         try {
             const csvLines: string[] = ['CurrentState,NextState,TransitionCount(Numerator),TotalTransitions(Denominator)'];
 
-            for (const [current, transitions] of this.chain.entries()) {
-                const total = this.totals.get(current) || 0;
+            for (const [current, transitions] of this.#chain.entries()) {
+                const total = this.#totals.get(current) || 0;
 
                 for (const [next, count] of transitions.entries()) {
                     
@@ -90,11 +90,11 @@ class MarkovChain {
         let result = null
         
         // Get the transition map for the current state
-        const transitions = this.chain.get(current);
+        const transitions = this.#chain.get(current);
 
         // If there are transitions and a total count for the current state, perform weighted random selection
-        if (transitions && this.totals.get(current)) {
-            const total = this.totals.get(current)!;
+        if (transitions && this.#totals.get(current)) {
+            const total = this.#totals.get(current)!;
             let rand = random * total;
 
             for (const [nextState, count] of transitions.entries()) {
@@ -108,7 +108,6 @@ class MarkovChain {
         return result;
     }
 }
-
 
 const markovChain = new MarkovChain();
 markovChain.trainFromCSV('training.csv');
