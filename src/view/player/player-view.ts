@@ -15,6 +15,7 @@ export default class PlayerView {
         this.#output = output;
 
         this.#createGameWrapper();
+        this.#renderGame(); 
     }
 
     #renderGame() {
@@ -35,12 +36,18 @@ export default class PlayerView {
             else if (item instanceof Building) {
                 this.#playerController.purchaseBuilding(item);
             }
+
+            this.#refreshStore();
         } catch (e: any) {
             this.#output.displayMessage(e.message);
         }
     }
 
-
+    #refreshStore() {
+        this.#renderPurchasedUpgrades();
+        this.#renderPurchasedBuildings();
+        this.#renderStore();
+    }
 
     #createGameWrapper() {
         const app = document.getElementById("app")!;
@@ -105,9 +112,14 @@ export default class PlayerView {
     #renderPurchasedBuildings() {
         if (this.#player.buildings && this.#player.buildings.length > 0) {
             let gameMain = document.querySelector(".game-main")!;
+            
+            // remove old purchased buildings container if it exists (it probably will)
+            gameMain.querySelector("#purchased-buildings")?.remove();
+            
             let buildingsContainer = document.createElement("div");
             buildingsContainer.id = "purchased-buildings";
             buildingsContainer.className = "purchased-buildings";
+            
 
             for (const building of this.#player.buildings) {
                 const buildingElement = document.createElement("img");
@@ -200,7 +212,6 @@ export default class PlayerView {
     }
 
     notify() {
-        this.#renderGame();
         document.querySelector("#banana-count")!.textContent = "Bananas: " + this.#player.bananas.toString();
     }
 }
