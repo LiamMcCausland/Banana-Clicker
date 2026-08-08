@@ -8,6 +8,7 @@ export default class ChainLoader {
     #reverseConversionTable = new Map<string, string>();
     #upgrades: Upgrade[] = [];
 
+    // Factory method to create a ChainLoader instance and load the model from a CSV file
     static async create(filePath: string): Promise<ChainLoader> {
         const loader = new ChainLoader();
         await loader.#loadFromCSV(filePath);
