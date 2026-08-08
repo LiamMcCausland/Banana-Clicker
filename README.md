@@ -42,3 +42,4 @@ the matrix output can be seen in the `output-matrix.csv`.
 * <https://stackoverflow.com/questions/61900412/how-is-nodes-crypto-pbkdf2-supposed-to-work>
 * <https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest>
 * <https://stackoverflow.com/questions/30144580/typescript-multidimensional-array-initialization>
+* <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions>
