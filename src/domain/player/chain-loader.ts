@@ -27,6 +27,7 @@ export default class ChainLoader {
         }
     }
 
+    // loades the model from a CSV file and populates the chain and totals maps
     async #loadFromCSV(filePath: string) {
         try {
             const response = await fetch(filePath);
@@ -65,9 +66,8 @@ export default class ChainLoader {
         }
     }
 
-    /**
-     * Predicts the next word given a current word
-     */
+
+    // Predicts the next word given a current word and a random number
     async predict(current: Upgrade, random: number) {
         if (!current) {
             return this.#upgrades[0];
