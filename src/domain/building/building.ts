@@ -65,14 +65,7 @@ export default class Building {
     }
 
     // Returns all possible buildings in the game
-    static getAllBuildings(): Building[] {
-        return [
-            new Building("Acuminata", "A sturdy banana tree", 100, 1),
-            new Building("Balbisiana", "A productive banana tree", 200, 2),
-        ];
-    }
-
-    static async newGetAllBuildings(): Promise<Building[]> {
+    static async getAllBuildings(): Promise<Building[]> {
         const result = await db().query('select * from purchaseable_buildings');
         return result.rows.map(row => new Building(row.name, row.description, row.price, row.bps));
     }

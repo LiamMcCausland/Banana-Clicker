@@ -5,6 +5,8 @@ import { hashPassword, verifyPassword, generateSalt } from "../security/hash.ts"
 import assert from "../../assertions.ts";
 import type Listener from "../listener/listener.ts";
 import { AccountNotFoundException, NotEnoughBananasException, DuplicateUpgradeException, UpgradeNotFoundException, BuildingNotFoundException } from "../../exceptions/exceptions.ts";
+import ChainLoader from "./chain-loader.ts";
+import seedrandom from "seedrandom";
 
 export default class Player {
     #bananas: number;
@@ -14,16 +16,21 @@ export default class Player {
     #username: string;
     #passwordHash: string;
     #passwordSalt: string;
+    #chainLoader: ChainLoader;
+    #roboBuyEnabled: boolean;
+    #roboBuyState: string;
 
-    constructor(username: string, passwordHash: string, passwordSalt: string, bananas: number, upgrades: Upgrade[], buildings: Building[]) {
+    constructor(username: string, passwordHash: string, passwordSalt: string, bananas: number, upgrades: Upgrade[], buildings: Building[], chainLoader: ChainLoader) {
         this.#bananas = bananas;
         this.#upgrades = upgrades;
         this.#buildings = buildings;
         this.#username = username;
         this.#passwordHash = passwordHash;
         this.#passwordSalt = passwordSalt;
-
         this.#listeners = [];
+        this.#chainLoader = chainLoader;
+        this.#roboBuyEnabled = false;
+        this.#roboBuyState = "Robo-buy is disabled";
         this.#checkPlayer();
     }
 
@@ -47,9 +54,9 @@ export default class Player {
         assert(this.#passwordSalt !== null && this.#passwordSalt !== "", "Password salt cannot be null or empty");
     }
 
-    
+
     // Logs in a player with the given username and password, returning a Player instance if successful
-    static async login(username: string, password: string) {
+    static async login(username: string, password: string, chainLoader: ChainLoader) {
         const result = await db().query(
             `select * from player where username = $1`,
             [username]
@@ -71,13 +78,13 @@ export default class Player {
         // Fetch the player's upgrades and buildings from the database
         const upgrades = await Upgrade.fetchUpgrades(username);
         const buildings = await Building.fetchBuildings(username);
-       
+
         // Return a new Player instance with the retrieved data
-        return new Player(row.username, row.password_hash, row.password_salt, row.bananas, upgrades, buildings);
+        return new Player(row.username, row.password_hash, row.password_salt, row.bananas, upgrades, buildings, chainLoader);
     }
 
     // Registers a new player in the database and returns a new Player instance
-    static async register(username: string, password: string) {
+    static async register(username: string, password: string, chainLoader: ChainLoader) {
         const salt = generateSalt();
         const hash = await hashPassword(password, salt);
 
@@ -86,7 +93,7 @@ export default class Player {
             [username, hash, salt, 0]
         );
 
-        return new Player(username, hash, salt, 0, [], []);
+        return new Player(username, hash, salt, 0, [], [], chainLoader);
     }
 
     // Registers a listener to be notified of changes to the player state
@@ -113,8 +120,14 @@ export default class Player {
         this.notifyAll();
     }
 
-    // Run every second, adding bananas based on buildings owned, returns the amount of bananas redeemed.
+    // Functions run each second via the player controller
     tick() {
+        this.#buildingTick();
+        this.#roboBuyTick();
+    }
+
+    // Adds bananas from buildings each second
+    #buildingTick() {
         let bananasPerSecond = 0;
 
         for (const building of this.#buildings) {
@@ -124,6 +137,37 @@ export default class Player {
         this.#bananas += bananasPerSecond;
         this.#checkPlayer();
         this.notifyAll();
+    }
+
+    // Toggles the robo-buy feature on or off
+    toggleRoboBuy(enabled: boolean) {
+        this.#roboBuyEnabled = enabled; 
+        this.notifyAll();
+    }
+
+    // If robo-buy is enabled, this function will attempt to purchase the next upgrade in the chain if the player has enough bananas.
+    async #roboBuyTick() {
+        if (this.#roboBuyEnabled) {
+            const rand = seedrandom(this.#username).quick();
+            let lastPurchased = this.#upgrades[this.#upgrades.length - 1];
+            const next = await this.#chainLoader.predict(lastPurchased, rand);
+
+            
+            if (next && !this.#upgrades.includes(next)) {
+                this.#roboBuyState = "Next upgrade to purchase: " + next.name + " for " + next.price + " bananas";
+                try {
+                    this.purchaseUpgrade(next);
+                    this.#roboBuyState = "Purchased upgrade!";
+                } catch (e) {
+                    if (e instanceof Error) {
+                        console.log(e.message);
+                    }
+                }
+            } 
+        } else {
+            this.#roboBuyState = "Robo-buy is disabled";
+        }
+        
     }
 
     // Purchases an upgrade from the shop, returns true if successful, false if not.
@@ -190,9 +234,13 @@ export default class Player {
         return this.#username;
     }
 
+    get roboBuyState() {
+        return this.#roboBuyState;
+    }
+    
     // Save player state to the database, including upgrades and buildings
     async save() {
-        
+
         // Save player state to database
         this.#checkPlayer();
         await db().query('update player set bananas = $1 where username = $2', [this.#bananas, this.#username]);

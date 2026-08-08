@@ -3,19 +3,22 @@ import PlayerView from "../../view/player/player-view.ts";
 import Upgrade from "../../domain/upgrade/upgrade.ts";
 import Building from "../../domain/building/building.ts";
 import OutputHandler from "../../view/output-handler.ts";
+import ChainLoader from "../../domain/player/chain-loader.ts";
 
 export default class PlayerController {
     #player!: Player;
     #playerView!: PlayerView;
     #output: OutputHandler;
+    #chainLoader: ChainLoader;
 
-    constructor(output: OutputHandler) {
+    constructor(output: OutputHandler, chainLoader: ChainLoader) {
         this.#output = output;
+        this.#chainLoader = chainLoader;
     }
 
     // Login the player and create a new PlayerView for the player
     async login(username: string, password: string) {
-        this.#player = await Player.login(username, password);
+        this.#player = await Player.login(username, password, this.#chainLoader);
 
         this.#playerView = new PlayerView(
             this.#player,
@@ -30,7 +33,7 @@ export default class PlayerController {
 
     // Register a new player and create a new PlayerView for the player
     async register(username: string, password: string) {
-        this.#player = await Player.register(username, password);
+        this.#player = await Player.register(username, password, this.#chainLoader);
 
         this.#playerView = new PlayerView(
             this.#player,
@@ -72,7 +75,16 @@ export default class PlayerController {
         this.#player.purchaseBuilding(building);
     }
 
+    // When robo-buy is toggled
+    toggleRoboBuy(enabled: boolean) {
+        this.#player.toggleRoboBuy(enabled);
+    }
+
     // getters:
+    get roboBuyState() {
+        return this.#player.roboBuyState;
+    }
+
     get player() {
         return this.#player;
     }
@@ -85,13 +97,5 @@ export default class PlayerController {
     }
     get buildings() {
         return Building.getAllBuildings();
-    }
-
-    async newGetAllBuildings() {
-        return await Building.newGetAllBuildings();
-    }
-
-    async newGetAllUpgrades() {
-        return await Upgrade.newGetAllUpgrades();
     }
 }

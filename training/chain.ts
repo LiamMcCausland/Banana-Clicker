@@ -1,15 +1,12 @@
 import * as fs from 'fs';
 
+// A MarkovChain class that can be trained with sequences of states and can predict the next state based on the current state and a random number
 class MarkovChain {
-    // maps current word to the next word and marks its transition count
-    #chain = new Map<string, Map<string, number>>();
 
-    // maps the current word to the total number of transitions from that word
+    #chain = new Map<string, Map<string, number>>();
     #totals = new Map<string, number>();
 
-    /**
-     * Trains the model using an array of sequential string tokens
-     */
+    // Trains the Markov chain with a sequence of states by counting the transitions between consecutive states and storing the counts in the chain and totals maps
     train(states: string[]): void {
         for (let i = 0; i < states.length - 1; i++) {
             const current = states[i];
@@ -33,9 +30,7 @@ class MarkovChain {
         }
     }
 
-    /**
-     * Reads a CSV file where each line is a separate comma-separated word stream
-     */
+    // Parses a csv and feeds the data into the train function
     trainFromCSV(filePath: string): void {
         try {
             const fileContent = fs.readFileSync(filePath, 'utf-8');
@@ -57,9 +52,7 @@ class MarkovChain {
         }
     }
 
-    /**
-     * Exports the internal frequency statistics matrix to a CSV file
-     */
+    // exports the maps to a csv file with the following columns: CurrentState, NextState, TransitionCount(Numerator), TotalTransitions(Denominator)
     exportMatrixToCSV(outputPath: string): void {
         try {
             const csvLines: string[] = ['CurrentState,NextState,TransitionCount(Numerator),TotalTransitions(Denominator)'];
@@ -83,9 +76,7 @@ class MarkovChain {
         }
     }
 
-    /**
-     * Predicts the next word given a current word
-     */
+    // Example predict implementation that uses a random number to select the next state based on the transition probabilities
     predict(current: string, random: number): string | null {
         let result = null
         

@@ -63,14 +63,7 @@ export default class Upgrade {
     }
 
     // Returns all available upgrades in the game
-    static getAllUpgrades(): Upgrade[] {
-        return [
-            new Upgrade("Double Click", "Double bananas per click", 50, 2),
-            new Upgrade("Triple Click", "Triple bananas per click", 100, 3),
-        ];
-    }
-
-    static async newGetAllUpgrades(): Promise<Upgrade[]> {
+    static async getAllUpgrades(): Promise<Upgrade[]> {
         const upgradesResult = await db().query("select * from purchaseable_upgrades");
         const upgrades: Upgrade[] = [];
         for (const row of upgradesResult.rows) {

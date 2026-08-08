@@ -15,7 +15,7 @@ export default class PlayerView {
         this.#output = output;
 
         this.#createGameWrapper();
-        this.#renderGame(); 
+        this.#renderGame();
     }
 
     #renderGame() {
@@ -25,6 +25,7 @@ export default class PlayerView {
         this.#renderPurchasedBuildings();
         this.#renderStore();
         this.#renderSaveButton();
+        this.#renderRoboBuyToggle();
     }
 
     #purchase(item: any): void {
@@ -41,6 +42,29 @@ export default class PlayerView {
         } catch (e: any) {
             this.#output.displayMessage(e.message);
         }
+    }
+
+    #renderRoboBuyToggle() {
+        const gameMain = document.querySelector(".game-main")!;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "robobuy-toggle-wrapper";
+        wrapper.innerHTML = `
+        <label class="robobuy-toggle-label" for="robobuy-toggle">Robo-Buy</label>
+        <label class="robobuy-switch">
+            <input type="checkbox" id="robobuy-toggle" />
+            <span class="robobuy-slider"></span>
+        </label>
+<label id="robobuy-status" class="robobuy-status">Robo-buy is disabled</label>
+    `;
+
+        gameMain.appendChild(wrapper);
+
+        document.querySelector("#robobuy-status")!.textContent = "Robo-buy is disabled";
+        document.querySelector("#robobuy-toggle")!.addEventListener("change", (e) => {
+            const enabled = (e.target as HTMLInputElement).checked;
+            this.#playerController.toggleRoboBuy(enabled);
+        });
     }
 
     #refreshStore() {
@@ -112,14 +136,14 @@ export default class PlayerView {
     #renderPurchasedBuildings() {
         if (this.#player.buildings && this.#player.buildings.length > 0) {
             let gameMain = document.querySelector(".game-main")!;
-            
+
             // remove old purchased buildings container if it exists (it probably will)
             gameMain.querySelector("#purchased-buildings")?.remove();
-            
+
             let buildingsContainer = document.createElement("div");
             buildingsContainer.id = "purchased-buildings";
             buildingsContainer.className = "purchased-buildings";
-            
+
 
             for (const building of this.#player.buildings) {
                 const buildingElement = document.createElement("img");
@@ -142,7 +166,7 @@ export default class PlayerView {
 
         const container = document.querySelector('#upgrades-list')!;
         container.innerHTML = '';
-        const upgrades = await this.#playerController.newGetAllUpgrades();
+        const upgrades = await this.#playerController.upgrades;
 
         // Render available upgrades
         for (const upgrade of upgrades) {
@@ -167,7 +191,7 @@ export default class PlayerView {
         // Render available buildings
         const buildingContainer = document.querySelector('#buildings-list')!;
         buildingContainer.innerHTML = '';
-        const buildings = await this.#playerController.newGetAllBuildings();
+        const buildings = await this.#playerController.buildings;
 
         for (const building of buildings) {
 
@@ -213,5 +237,12 @@ export default class PlayerView {
 
     notify() {
         document.querySelector("#banana-count")!.textContent = "Bananas: " + this.#player.bananas.toString();
+        document.querySelector("#robobuy-status")!.textContent = this.#playerController.roboBuyState;
+
+        // Rerender store if an upgrade was purchased, so that it disappears from the store
+        let roboStatus = document.querySelector("#robobuy-status")!.textContent;
+        if (roboStatus === "Purchased upgrade!") {
+            this.#refreshStore();
+        }
     }
 }
