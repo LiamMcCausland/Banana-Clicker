@@ -43,3 +43,4 @@ the matrix output can be seen in the `output-matrix.csv`.
 * <https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest>
 * <https://stackoverflow.com/questions/30144580/typescript-multidimensional-array-initialization>
 * <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions>
+* <https://stackoverflow.com/questions/929021/what-are-static-factory-methods?__cf_chl_tk=o.hku6tpi2mQC6dhW9CeyoJ8vz1vioGIeum4WXDhB9E-1786154501-1.0.1.1-ieOkTUd3YcKbZPxFvJwBhNXPNNUkA180AEXvhGapvos>
